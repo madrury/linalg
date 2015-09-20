@@ -35,8 +35,25 @@ struct vector* vector_linspace(int length, double min, double max) {
 struct vector* vector_from_array(int length, double *data) {
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
-        //printf("Copying %.2f.\n", data[i]);
         v->data[i] = data[i];
+    }
+    return v;
+}
+
+struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
+    // TODO: Check vector lengths.
+    struct vector* v = vector_new(v1->length);
+    for(int i = 0; i < v->length; i++) {
+        v->data[i] = v1->data[i] - v2->data[i];
+    }
+    return v;
+}
+
+struct vector* vector_add(struct vector* v1, struct vector* v2) {
+    // TODO: Check vector lengths.
+    struct vector* v = vector_new(v1->length);
+    for(int i = 0; i < v->length; i++) {
+        v->data[i] = v1->data[i] + v2->data[i];
     }
     return v;
 }
