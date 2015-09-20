@@ -113,13 +113,18 @@ double vector_dot_product(struct vector* v1, struct vector* v2) {
 }
 
 void vector_print(struct vector* v) {
-    double* v_data = v->data;
-    printf("[%.2f", v_data[0]);
-    for(int i = 1; i < v->length - 1; i++) {
-        printf(", ");
-        printf("%.2f", v_data[i]);
+    if(v->length == 0) {
+        printf("[]\n");
+    } else if (v->length == 1) {
+        printf("[%.2f]\n", v->data[0]);
+    } else {
+        printf("[%.2f", v->data[0]);
+        for(int i = 1; i < v->length - 1; i++) {
+            printf(", ");
+            printf("%.2f", v->data[i]);
+        }
+        printf(", %.2f]\n", v->data[v->length - 1]);
     }
-    printf(", %.2f]\n", v_data[v->length - 1]);
 }
 
 void _vector_check_lengths(struct vector* v1, struct vector* v2) {
