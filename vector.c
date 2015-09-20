@@ -24,6 +24,16 @@ struct vector* vector_zeros(int length) {
     return v;
 }
 
+struct vector* vector_linspace(int length, double min, double max) {
+    struct vector* v = vector_new(length);
+    double* v_data = v->data;
+    double step = (max - min) / (length - 1);
+    for(int i = 0; i < v->length; i++) {
+        v_data[i] = min + step*i;
+    }
+    return v;
+}
+
 struct vector* vector_from_array(int length, double *data) {
     struct vector* v = vector_new(length);
     double* v_data = v->data;

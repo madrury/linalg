@@ -15,5 +15,10 @@ int main(int argc, char** argv) {
     vector_print(v2);
     vector_free(v2);
 
+    /* Test linspace */
+    struct vector* v3 = vector_linspace(11, 0, 1);
+    vector_print(v3);
+    vector_free(v3);
+
     return 0;
 }
