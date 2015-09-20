@@ -10,6 +10,7 @@ struct vector {
 };
 
 struct vector* vector_new(int length);
+struct vector* vector_new_view(int length, struct vector* parent, double* view);
 void           vector_free(struct vector*);
 
 struct vector* vector_zeros(int length);

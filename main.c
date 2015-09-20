@@ -16,6 +16,13 @@ void test_vector_from_array() {
     vector_free(v2);
 }
 
+void test_vector_view() {
+    struct vector* v = vector_zeros(5);
+    struct vector* view = vector_new_view(5, v, v->data);
+    vector_print(view);
+    vector_free(view); vector_free(v);
+}
+
 void test_vector_linspace() {
     struct vector* v3 = vector_linspace(11, 0, 1);
     vector_print(v3);
@@ -54,12 +61,13 @@ void test_vector_subtract() {
 
 int main(int argc, char** argv) {
 
-    test_vector_zeros();
-    test_vector_from_array();
-    test_vector_linspace();
-    test_vector_dot_product();
-    test_vector_add();
-    test_vector_subtract();
+//    test_vector_zeros();
+//    test_vector_from_array();
+//    test_vector_linspace();
+//    test_vector_dot_product();
+//    test_vector_add();
+//    test_vector_subtract();
+    test_vector_view();
 
     return 0;
 }

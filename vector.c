@@ -20,14 +20,36 @@ struct vector* vector_new(int length) {
     return new_vector;
 }
 
+struct vector* vector_new_view(int length, struct vector* parent, double* view) {
+    struct vector* new_vector = malloc(sizeof(struct vector));
+    check_memory((void*)new_vector);
+
+    new_vector->data = view;
+    new_vector->length = length;
+    new_vector->owns_memory = false;
+    new_vector->memory_owner = parent;
+    new_vector->ref_count = 0;
+
+    parent->ref_count += 1;
+
+    return new_vector;
+}
+
 void vector_free(struct vector* v) {
     if(v->owns_memory) {
-        free(v->data);
-    }
-    if(v->ref_count == 0) {
-        free(v);
+        if(v->ref_count == 0) {
+            free(v->data);
+            free(v);
+        } else {
+            raise_non_zero_reference_free_error();
+        }
     } else {
-        raise_non_zero_reference_free_error();
+        if(v->ref_count == 0) {
+            v->memory_owner->ref_count -= 1;
+            free(v);
+        } else {
+            raise_non_zero_reference_free_error();
+        }
     }
 }
 
