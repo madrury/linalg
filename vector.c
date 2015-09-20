@@ -20,7 +20,7 @@ struct vector* vector_new(int length) {
     return new_vector;
 }
 
-struct vector* vector_new_view(int length, struct vector* parent, double* view) {
+struct vector* vector_new_view(int length, double* view, struct vector* parent) {
     struct vector* new_vector = malloc(sizeof(struct vector));
     check_memory((void*)new_vector);
 
@@ -76,6 +76,13 @@ struct vector* vector_from_array(int length, double *data) {
         v->data[i] = data[i];
     }
     return v;
+}
+
+struct vector* vector_slice(int begin_idx, int end_idx, struct vector* v) {
+    int new_vector_length = end_idx - begin_idx;
+    double* begin_ptr = v->data + begin_idx;
+    struct vector* w = vector_new_view(new_vector_length, begin_ptr, v);
+    return w;
 }
 
 struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
