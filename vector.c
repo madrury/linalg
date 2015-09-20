@@ -4,11 +4,16 @@
 #include <stdbool.h>
 #include "vector.h"
 #include "errors.c"
+#include "util.c"
 
 struct vector* vector_new(int length) {
     struct vector* new_vector = malloc(sizeof(struct vector));
-    new_vector->length = length;
+    check_memory((void*)new_vector);
+
     new_vector->data = malloc((sizeof(double))*length);
+    check_memory((void*)new_vector->data);
+
+    new_vector->length = length;
     new_vector->owns_memory = true;
     new_vector->memory_owner = NULL;
     new_vector->ref_count = 0;
@@ -52,7 +57,7 @@ struct vector* vector_from_array(int length, double *data) {
 }
 
 struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
-    // TODO: Check vector lengths.
+    _vector_check_lengths(v1, v2);
     struct vector* v = vector_new(v1->length);
     for(int i = 0; i < v->length; i++) {
         v->data[i] = v1->data[i] - v2->data[i];
@@ -61,7 +66,7 @@ struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
 }
 
 struct vector* vector_add(struct vector* v1, struct vector* v2) {
-    // TODO: Check vector lengths.
+    _vector_check_lengths(v1, v2);
     struct vector* v = vector_new(v1->length);
     for(int i = 0; i < v->length; i++) {
         v->data[i] = v1->data[i] + v2->data[i];
@@ -70,7 +75,7 @@ struct vector* vector_add(struct vector* v1, struct vector* v2) {
 }
 
 double vector_dot_product(struct vector* v1, struct vector* v2) {
-    // TODO: Check vector lengths.
+    _vector_check_lengths(v1, v2);
     double dp = 0;
     for(int i = 0; i < v1->length; i++) {
         dp += v1->data[i] * v2->data[i];
@@ -86,4 +91,10 @@ void vector_print(struct vector* v) {
         printf("%.2f", v_data[i]);
     }
     printf(", %.2f]\n", v_data[v->length - 1]);
+}
+
+void _vector_check_lengths(struct vector* v1, struct vector* v2) {
+    if(v1->length != v2->length) {
+        raise_non_commensurate_vector_error();
+    }
 }

@@ -23,3 +23,4 @@ double         vector_dot_product(struct vector* v1, struct vector* v2);
 
 void           vector_print(struct vector*);
 
+void           _vector_check_lengths(struct vector* v1, struct vector* v2);
