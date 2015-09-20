@@ -1,18 +1,29 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdbool.h>
 #include "vector.h"
+#include "errors.c"
 
 struct vector* vector_new(int length) {
     struct vector* new_vector = malloc(sizeof(struct vector));
     new_vector->length = length;
     new_vector->data = malloc((sizeof(double))*length);
+    new_vector->owns_memory = true;
+    new_vector->memory_owner = NULL;
+    new_vector->ref_count = 0;
     return new_vector;
 }
 
 void vector_free(struct vector* v) {
-    free(v->data);
-    free(v);
+    if(v->owns_memory) {
+        free(v->data);
+    }
+    if(v->ref_count == 0) {
+        free(v);
+    } else {
+        raise_non_zero_reference_free_error();
+    }
 }
 
 struct vector* vector_zeros(int length) {

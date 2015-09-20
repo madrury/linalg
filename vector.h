@@ -1,8 +1,12 @@
 #pragma once
+#include <stdbool.h>
 
 struct vector {
     double* data;
     int length;
+    bool owns_memory;
+    struct vector* memory_owner;
+    int ref_count;
 };
 
 struct vector* vector_new(int length);
