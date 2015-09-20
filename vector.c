@@ -1,11 +1,12 @@
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 #include "vector.h"
 
 struct vector* vector_new(int length) {
     struct vector* new_vector = malloc(sizeof(struct vector));
     new_vector->length = length;
-    new_vector->data = malloc((sizeof(float))*length);
+    new_vector->data = malloc((sizeof(double))*length);
     return new_vector;
 }
 
@@ -19,6 +20,16 @@ struct vector* vector_zeros(int length) {
     double* v_data = v->data;
     for(int i = 0; i < v->length; i++) {
         v_data[i] = 0;
+    }
+    return v;
+}
+
+struct vector* vector_from_array(int length, double *data) {
+    struct vector* v = vector_new(length);
+    double* v_data = v->data;
+    for(int i = 0; i < v->length; i++) {
+        //printf("Copying %.2f.\n", data[i]);
+        v_data[i] = data[i];
     }
     return v;
 }
