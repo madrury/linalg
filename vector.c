@@ -17,31 +17,37 @@ void vector_free(struct vector* v) {
 
 struct vector* vector_zeros(int length) {
     struct vector* v = vector_new(length);
-    double* v_data = v->data;
     for(int i = 0; i < v->length; i++) {
-        v_data[i] = 0;
+        v->data[i] = 0;
     }
     return v;
 }
 
 struct vector* vector_linspace(int length, double min, double max) {
     struct vector* v = vector_new(length);
-    double* v_data = v->data;
     double step = (max - min) / (length - 1);
     for(int i = 0; i < v->length; i++) {
-        v_data[i] = min + step*i;
+        v->data[i] = min + step*i;
     }
     return v;
 }
 
 struct vector* vector_from_array(int length, double *data) {
     struct vector* v = vector_new(length);
-    double* v_data = v->data;
     for(int i = 0; i < v->length; i++) {
         //printf("Copying %.2f.\n", data[i]);
-        v_data[i] = data[i];
+        v->data[i] = data[i];
     }
     return v;
+}
+
+double vector_dot_product(struct vector* v1, struct vector* v2) {
+    // TODO: Check vector lengths.
+    double dp = 0;
+    for(int i = 0; i < v1->length; i++) {
+        dp += v1->data[i] * v2->data[i];
+    }
+    return dp;
 }
 
 void vector_print(struct vector* v) {
