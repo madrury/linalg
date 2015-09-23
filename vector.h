@@ -19,7 +19,9 @@ struct vector* vector_from_array(int length, double* data);
 struct vector* vector_slice(int begin_idx, int end_idx, struct vector* v);
 
 struct vector* vector_subtract(struct vector* v1, struct vector* v2);
+void           vector_subtract_into(struct vector* v1, struct vector* v2);
 struct vector* vector_add(struct vector* v1, struct vector* v2);
+void           vector_add_into(struct vector* v1, struct vector* v2);
 
 double         vector_dot_product(struct vector* v1, struct vector* v2);
 

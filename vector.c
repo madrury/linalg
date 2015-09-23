@@ -94,6 +94,13 @@ struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
     return v;
 }
 
+void vector_subtract_into(struct vector* v1, struct vector* v2) {
+    _vector_check_lengths(v1, v2);
+    for(int i = 0; i < v1->length; i++) {
+        v1->data[i] = v1->data[i] - v2->data[i];
+    }
+}
+
 struct vector* vector_add(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     struct vector* v = vector_new(v1->length);
@@ -101,6 +108,13 @@ struct vector* vector_add(struct vector* v1, struct vector* v2) {
         v->data[i] = v1->data[i] + v2->data[i];
     }
     return v;
+}
+
+void vector_add_into(struct vector* v1, struct vector* v2) {
+    _vector_check_lengths(v1, v2);
+    for(int i = 0; i < v1->length; i++) {
+        v1->data[i] = v1->data[i] + v2->data[i];
+    }
 }
 
 double vector_dot_product(struct vector* v1, struct vector* v2) {
