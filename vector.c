@@ -36,6 +36,14 @@ struct vector* vector_new_view(struct linalg_obj* parent, double* view, int leng
     return new_vector;
 }
 
+struct vector* vector_from_array(int length, double *data) {
+    struct vector* v = vector_new(length);
+    for(int i = 0; i < v->length; i++) {
+        DATA(v)[i] = data[i];
+    }
+    return v;
+}
+
 void vector_free(struct vector* v) {
     struct linalg_obj* mem_owner;
     if(OWNS_MEMORY(v)) {
@@ -64,6 +72,7 @@ struct vector* vector_zeros(int length) {
     return v;
 }
 
+
 //struct vector* vector_linspace(int length, double min, double max) {
 //    struct vector* v = vector_new(length);
 //    double step = (max - min) / (length - 1);
@@ -73,13 +82,6 @@ struct vector* vector_zeros(int length) {
 //    return v;
 //}
 //
-//struct vector* vector_from_array(int length, double *data) {
-//    struct vector* v = vector_new(length);
-//    for(int i = 0; i < v->length; i++) {
-//        v->data[i] = data[i];
-//    }
-//    return v;
-//}
 //
 //struct vector* vector_slice(int begin_idx, int end_idx, struct vector* v) {
 //    int new_vector_length = end_idx - begin_idx;
