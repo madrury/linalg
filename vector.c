@@ -120,14 +120,14 @@ void vector_add_into(struct vector* v1, struct vector* v2) {
     }
 }
 
-//double vector_dot_product(struct vector* v1, struct vector* v2) {
-//    _vector_check_lengths(v1, v2);
-//    double dp = 0;
-//    for(int i = 0; i < v1->length; i++) {
-//        dp += v1->data[i] * v2->data[i];
-//    }
-//    return dp;
-//}
+double vector_dot_product(struct vector* v1, struct vector* v2) {
+    _vector_check_lengths(v1, v2);
+    double dp = 0;
+    for(int i = 0; i < v1->length; i++) {
+        dp += DATA(v1)[i] * DATA(v2)[i];
+    }
+    return dp;
+}
 
 void vector_print(struct vector* v) {
     if(v->length == 0) {
