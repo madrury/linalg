@@ -14,7 +14,7 @@ void           vector_free(struct vector*);
 
 struct vector* vector_zeros(int length);
 struct vector* vector_linspace(int length, double min, double max);
-struct vector* vector_slice(int begin_idx, int end_idx, struct vector* v);
+struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx);
 
 struct vector* vector_subtract(struct vector* v1, struct vector* v2);
 void           vector_subtract_into(struct vector* v1, struct vector* v2);

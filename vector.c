@@ -81,13 +81,13 @@ struct vector* vector_linspace(int length, double min, double max) {
     return v;
 }
 
-//struct vector* vector_slice(int begin_idx, int end_idx, struct vector* v) {
-//    int new_vector_length = end_idx - begin_idx;
-//    double* begin_ptr = v->data + begin_idx;
-//    struct vector* w = vector_new_view(new_vector_length, begin_ptr, v);
-//    return w;
-//}
-//
+struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx) {
+    int new_vector_length = end_idx - begin_idx;
+    double* begin_ptr = DATA(v) + begin_idx;
+    struct vector* w = vector_new_view((struct linalg_obj*) v, begin_ptr, new_vector_length);
+    return w;
+}
+
 //struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
 //    _vector_check_lengths(v1, v2);
 //    struct vector* v = vector_new(v1->length);
