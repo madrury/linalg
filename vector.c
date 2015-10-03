@@ -18,23 +18,23 @@ struct vector* vector_new(int length) {
     OWNS_MEMORY(new_vector)= true;
     MEMORY_OWNER(new_vector) = NULL;
     REF_COUNT(new_vector) = 0;
+
     return new_vector;
 }
 
-//struct vector* vector_new_view(int length, double* view, struct vector* parent) {
-//    struct vector* new_vector = malloc(sizeof(struct vector));
-//    check_memory((void*)new_vector);
-//
-//    new_vector->data = view;
-//    new_vector->length = length;
-//    new_vector->owns_memory = false;
-//    new_vector->memory_owner = parent;
-//    new_vector->ref_count = 0;
-//
-//    parent->ref_count += 1;
-//
-//    return new_vector;
-//}
+struct vector* vector_new_view(struct linalg_obj* parent, double* view, int length) {
+    struct vector* new_vector = malloc(sizeof(struct vector));
+    check_memory((void*)new_vector);
+
+    DATA(new_vector) = view;
+    new_vector->length = length;
+    OWNS_MEMORY(new_vector) = false;
+    MEMORY_OWNER(new_vector) = parent;
+    REF_COUNT(new_vector) = 0;
+    REF_COUNT(parent) += 1;
+
+    return new_vector;
+}
 
 void vector_free(struct vector* v) {
     struct linalg_obj* mem_owner;

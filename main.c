@@ -15,14 +15,14 @@ void test_vector_zeros() {
 //    vector_print(v2);
 //    vector_free(v2);
 //}
-//
-//void test_vector_view() {
-//    struct vector* v = vector_zeros(5);
-//    struct vector* view = vector_new_view(5, v->data, v);
-//    vector_print(view);
-//    vector_free(view); vector_free(v);
-//}
-//
+
+void test_vector_view() {
+    struct vector* v = vector_zeros(5);
+    struct vector* view = vector_new_view((struct linalg_obj*) v, DATA(v), 3);
+    vector_print(view);
+    vector_free(view); vector_free(v);
+}
+
 //void test_vector_linspace() {
 //    struct vector* v3 = vector_linspace(11, 0, 1);
 //    vector_print(v3);
@@ -98,7 +98,7 @@ int main(int argc, char** argv) {
 //    test_vector_add_into();
 //    test_vector_subtract();
 //    test_vector_subtract_into();
-//    test_vector_view();
+    test_vector_view();
 //    test_vector_slice();
 
     return 0;

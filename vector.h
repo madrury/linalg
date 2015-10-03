@@ -8,7 +8,7 @@ struct vector {
 };
 
 struct vector* vector_new(int length);
-struct vector* vector_new_view(int length, double* view, struct vector* parent);
+struct vector* vector_new_view(struct linalg_obj* parent, double* view, int length);
 void           vector_free(struct vector*);
 
 struct vector* vector_zeros(int length);
