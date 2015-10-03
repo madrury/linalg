@@ -1,12 +1,10 @@
 #pragma once
 #include <stdbool.h>
+#include "linalg_obj.h"
 
 struct vector {
-    double* data;
+    struct linalg_obj la_obj;
     int length;
-    bool owns_memory;
-    struct vector* memory_owner;
-    int ref_count;
 };
 
 struct vector* vector_new(int length);
