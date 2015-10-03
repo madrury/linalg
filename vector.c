@@ -72,17 +72,15 @@ struct vector* vector_zeros(int length) {
     return v;
 }
 
+struct vector* vector_linspace(int length, double min, double max) {
+    struct vector* v = vector_new(length);
+    double step = (max - min) / (length - 1);
+    for(int i = 0; i < v->length; i++) {
+        DATA(v)[i] = min + step*i;
+    }
+    return v;
+}
 
-//struct vector* vector_linspace(int length, double min, double max) {
-//    struct vector* v = vector_new(length);
-//    double step = (max - min) / (length - 1);
-//    for(int i = 0; i < v->length; i++) {
-//        v->data[i] = min + step*i;
-//    }
-//    return v;
-//}
-//
-//
 //struct vector* vector_slice(int begin_idx, int end_idx, struct vector* v) {
 //    int new_vector_length = end_idx - begin_idx;
 //    double* begin_ptr = v->data + begin_idx;

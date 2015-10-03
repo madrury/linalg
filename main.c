@@ -23,12 +23,12 @@ void test_vector_view() {
     vector_free(view); vector_free(v);
 }
 
-//void test_vector_linspace() {
-//    struct vector* v3 = vector_linspace(11, 0, 1);
-//    vector_print(v3);
-//    vector_free(v3);
-//}
-//
+void test_vector_linspace() {
+    struct vector* v3 = vector_linspace(11, 0, 1);
+    vector_print(v3);
+    vector_free(v3);
+}
+
 //void test_vector_dot_product() {
 //    double D1[] = {1.0, 1.0, 1.0, 0.0, 0.0};
 //    struct vector* v1 = vector_from_array(5, D1);
@@ -91,8 +91,8 @@ void test_vector_view() {
 int main(int argc, char** argv) {
 
 //    test_vector_zeros();
-    test_vector_from_array();
-//    test_vector_linspace();
+//    test_vector_from_array();
+    test_vector_linspace();
 //    test_vector_dot_product();
 //    test_vector_add();
 //    test_vector_add_into();
