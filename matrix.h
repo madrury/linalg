@@ -11,6 +11,7 @@ struct matrix* matrix_new(int n_row, int n_col);
 void           matrix_free(struct matrix* M);
 
 struct matrix* matrix_zeros(int n_row, int n_col);
+struct matrix* matrix_identity(int size);
 
 struct vector* matrix_row_view(struct matrix* M, int row);
 

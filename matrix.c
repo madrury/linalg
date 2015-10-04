@@ -53,6 +53,21 @@ struct matrix* matrix_zeros(int n_row, int n_col) {
     return M;
 }
 
+struct matrix* matrix_identity(int size) {
+    struct matrix* M = matrix_new(size, size);
+    int row, col;
+    for(int i = 0; i < size * size; i++) {
+        row = i / size;
+        col = i % size;
+        if(row == col) {
+            DATA(M)[i] = 1;
+        } else {
+            DATA(M)[i] = 0;
+        }
+    }
+    return M;
+}
+
 struct vector* matrix_row_view(struct matrix* M, int row) {
     double* row_p = DATA(M) + (row * M->n_col);
     struct vector* r = vector_new_view((struct linalg_obj*) M, row_p, M->n_col);

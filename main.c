@@ -96,6 +96,12 @@ void test_matrix_zeros() {
     matrix_free(M);
 }
 
+void test_matrix_identity() {
+    struct matrix* M = matrix_identity(5);
+    matrix_print(M);
+    matrix_free(M);
+}
+
 int main(int argc, char** argv) {
 
 //    test_vector_zeros();
@@ -108,7 +114,7 @@ int main(int argc, char** argv) {
 //    test_vector_subtract_into();
 //    test_vector_view();
 //    test_vector_slice();
-    test_matrix_zeros();
-
+//    test_matrix_zeros();
+    test_matrix_identity();
     return 0;
 }
