@@ -1,6 +1,6 @@
-#pragma once
 #include <stdlib.h>
 #include <stdio.h>
+#include "errors.h"
 
 void raise_memory_allocation_error() {
     fprintf(stderr, "Memory allocation error.\n");

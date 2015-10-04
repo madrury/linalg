@@ -4,8 +4,8 @@
 #include <stdbool.h>
 #include "linalg_obj.h"
 #include "vector.h"
-#include "errors.c"
-#include "util.c"
+#include "errors.h"
+#include "util.h"
 
 struct vector* vector_new(int length) {
     struct vector* new_vector = malloc(sizeof(struct vector));

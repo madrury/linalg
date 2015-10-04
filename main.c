@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "vector.h"
+#include "matrix.h"
 
 
 void test_vector_zeros() {
@@ -89,18 +90,25 @@ void test_vector_slice() {
     vector_free(v);
 }
 
+void test_matrix_zeros() {
+    struct matrix* M = matrix_zeros(3, 3);
+    matrix_print(M);
+    matrix_free(M);
+}
+
 int main(int argc, char** argv) {
 
 //    test_vector_zeros();
 //    test_vector_from_array();
 //    test_vector_linspace();
-    test_vector_dot_product();
+//    test_vector_dot_product();
 //    test_vector_add();
 //    test_vector_add_into();
 //    test_vector_subtract();
 //    test_vector_subtract_into();
 //    test_vector_view();
 //    test_vector_slice();
+    test_matrix_zeros();
 
     return 0;
 }
