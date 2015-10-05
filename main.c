@@ -102,6 +102,15 @@ void test_matrix_identity() {
     matrix_free(M);
 }
 
+void test_matrix_from_array() {
+    double D[] = {1.0, 2.0, 3.0,
+                  4.0, 5.0, 6.0,
+                  7.0, 8.0, 9.0};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    matrix_print(M);
+    matrix_free(M);
+}
+
 int main(int argc, char** argv) {
 
 //    test_vector_zeros();
@@ -115,6 +124,8 @@ int main(int argc, char** argv) {
 //    test_vector_view();
 //    test_vector_slice();
 //    test_matrix_zeros();
-    test_matrix_identity();
+//    test_matrix_identity();
+    test_matrix_from_array();
+
     return 0;
 }

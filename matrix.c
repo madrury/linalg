@@ -25,6 +25,14 @@ struct matrix* matrix_new(int n_row, int n_col) {
     return new_matrix;
 }
 
+struct matrix* matrix_from_array(double* data, int n_row, int n_col) {
+    struct matrix* M = matrix_new(n_row, n_col);
+    for(int i = 0; i < n_row * n_col; i++) {
+        DATA(M)[i] = data[i];
+    }
+    return M;
+}
+
 void matrix_free(struct matrix* M) {
     struct linalg_obj* mem_owner;
     if(OWNS_MEMORY(M)) {
