@@ -11,6 +11,7 @@
 #define MATRIX_ROW(M, i) ((i) / (M->n_row))
 #define MATRIX_COL(M, i) ((i) % (M->n_row))
 #define MATRIX_IDX(M, r, c) (((r) * (M->n_col)) + (c))
+#define MATRIX_IDX_INTO(M, r, c) (DATA(M)[MATRIX_IDX(M, r, c)])
 
 
 struct matrix* matrix_new(int n_row, int n_col) {
@@ -90,6 +91,22 @@ struct matrix* matrix_transpose(struct matrix* M) {
          DATA(Mt)[i] = DATA(M)[MATRIX_IDX(M, MATRIX_COL(Mt, i), MATRIX_ROW(Mt, i))];
     }
     return Mt;
+}
+
+struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
+    //TODO: Check that dimenstions are commensurate.
+    struct matrix* Mprod = matrix_new(Mleft->n_row, Mright->n_col);
+    double sum;
+    for(int i = 0; i < Mprod->n_row; i++) {
+        for(int j = 0; j < Mprod->n_col; j++) {
+            sum = 0;
+            for(int k = 0; k < Mleft->n_col; k++) {
+                sum += MATRIX_IDX_INTO(Mleft, i, k) * MATRIX_IDX_INTO(Mright, k, j);
+            }
+            MATRIX_IDX_INTO(Mprod, i, j) = sum;
+        }
+    }
+    return Mprod;
 }
 
 void matrix_print(struct matrix* M) {
