@@ -90,6 +90,14 @@ void test_vector_slice() {
     vector_free(v);
 }
 
+void test_vector_normalize_into() {
+    double D[] = {1.0, 1.0, 1.0, 0.0, 0.0};
+    struct vector* v = vector_from_array(5, D);
+    vector_normalize_into(v);
+    vector_print(v);
+    vector_free(v);
+}
+
 void test_matrix_zeros() {
     struct matrix* M = matrix_zeros(3, 3);
     matrix_print(M);
@@ -152,6 +160,7 @@ int main(int argc, char** argv) {
 //    test_vector_add_into();
 //    test_vector_subtract();
 //    test_vector_subtract_into();
+    test_vector_normalize_into();
 //    test_vector_view();
 //    test_vector_slice();
 //    test_matrix_zeros();
@@ -159,7 +168,7 @@ int main(int argc, char** argv) {
 //    test_matrix_from_array();
 //    test_matrix_transpose();
 //    test_matrix_multiply();
-    test_matrix_multiply_2();
+//    test_matrix_multiply_2();
 
     return 0;
 }

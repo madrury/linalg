@@ -120,3 +120,28 @@ void matrix_print(struct matrix* M) {
     }
     printf("]\n");
 }
+
+
+//struct qr_decomp* qr_decomp_new(struct matrix* M) {
+//    struct qr_decomp*  qr = malloc(sizeof(struct qr_decomp));
+//    return qr;
+//}
+//
+//void qr_decomp_free(struct qr_decomp* qr) {
+//    matrix_free(qr->q);
+//    matrix_free(qr->r);
+//    free(qr);
+//}
+//
+//struct qr_decomp* matrix_qr_decomposition(struct matrix* M) {
+//    //TODO: Check that M is a square matrix.
+//    struct qr_decomp* qr = qr_decomp_new(struct matrix* M);
+//    struct matrix* q = matrix_new(M->n_row, M->n_row);
+//    struct matrix* r = matrix_new(M->n_row, M->n_row);
+//    struct matrix* Mtr = matrix_transpose(M);
+//    struct matrix* qtr = matrix_new(M->n_row, M->n_row);
+//    struct vector* current_projection;
+//    struct vector* current_unit_vector;
+//
+//
+//}

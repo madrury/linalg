@@ -15,13 +15,17 @@ void           vector_free(struct vector*);
 struct vector* vector_zeros(int length);
 struct vector* vector_linspace(int length, double min, double max);
 struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx);
+struct vector* vector_copy(struct vector* v);
 
 struct vector* vector_subtract(struct vector* v1, struct vector* v2);
 void           vector_subtract_into(struct vector* v1, struct vector* v2);
 struct vector* vector_add(struct vector* v1, struct vector* v2);
 void           vector_add_into(struct vector* v1, struct vector* v2);
+struct vector* vector_normalize(struct vector* v);
+void           vector_normalize_into(struct vector* v);
 
 double         vector_dot_product(struct vector* v1, struct vector* v2);
+double         vector_norm(struct vector* v);
 
 void           vector_print(struct vector*);
 

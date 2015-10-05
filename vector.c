@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include "linalg_obj.h"
 #include "vector.h"
 #include "errors.h"
@@ -88,6 +89,14 @@ struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx) {
     return w;
 }
 
+struct vector* vector_copy(struct vector* v) {
+    struct vector* w = vector_new(v->length);
+    for(int i = 0; i < v->length; i++) {
+        DATA(w)[i] = DATA(v)[i];
+    }
+    return w;
+}
+
 struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     struct vector* v = vector_new(v1->length);
@@ -120,6 +129,23 @@ void vector_add_into(struct vector* v1, struct vector* v2) {
     }
 }
 
+struct vector* vector_normalize(struct vector* v) {
+    struct vector* vnorm = vector_new(v->length);
+    double norm = vector_norm(v);
+    for(int i = 0; i < v->length; i++) {
+        DATA(vnorm)[i] = DATA(v)[i] / norm;
+    }
+    return vnorm;
+}
+
+void vector_normalize_into(struct vector* v) {
+    double norm_squared = vector_dot_product(v, v);
+    double norm = sqrt(norm_squared);
+    for(int i = 0; i < v->length; i++) {
+        DATA(v)[i] = DATA(v)[i] / norm;
+    }
+}
+
 double vector_dot_product(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     double dp = 0;
@@ -127,6 +153,11 @@ double vector_dot_product(struct vector* v1, struct vector* v2) {
         dp += DATA(v1)[i] * DATA(v2)[i];
     }
     return dp;
+}
+
+double vector_norm(struct vector* v) {
+    double norm_squared = vector_dot_product(v, v);
+    return sqrt(norm_squared);
 }
 
 void vector_print(struct vector* v) {
