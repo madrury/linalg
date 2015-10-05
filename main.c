@@ -160,6 +160,32 @@ void test_matrix_row_copy() {
     vector_free(r); matrix_free(M);
 }
 
+void test_matrix_column_copy() {
+    double D[] = {1.0, 2.0, 3.0,
+                  4.0, 5.0, 6.0,
+                  7.0, 8.0, 9.0};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct vector* c = matrix_column_copy(M, 1);
+    vector_print(c);
+    vector_free(c); matrix_free(M);
+}
+
+void test_matrix_copy_vector_into_row() {
+    struct matrix* M = matrix_zeros(3, 3);
+    struct vector* v = vector_linspace(3, 0, 1);
+    matrix_copy_vector_into_row(M, v, 1);
+    matrix_print(M);
+    matrix_free(M); vector_free(v);
+}
+
+void test_matrix_copy_vector_into_column() {
+    struct matrix* M = matrix_zeros(3, 3);
+    struct vector* v = vector_linspace(3, 0, 1);
+    matrix_copy_vector_into_column(M, v, 1);
+    matrix_print(M);
+    matrix_free(M); vector_free(v);
+}
+    
 int main(int argc, char** argv) {
 
 //    test_vector_zeros();
@@ -179,7 +205,10 @@ int main(int argc, char** argv) {
 //    test_matrix_transpose();
 //    test_matrix_multiply();
 //    test_matrix_multiply_2();
-    test_matrix_row_copy();
+//    test_matrix_row_copy();
+//    test_matrix_column_copy();
+    test_matrix_copy_vector_into_row();
+    test_matrix_copy_vector_into_column();
 
     return 0;
 }

@@ -75,6 +75,29 @@ struct vector* matrix_row_copy(struct matrix* M, int row) {
     return r;
 }
 
+struct vector* matrix_column_copy(struct matrix* M, int col) {
+    //TODO: Check that column is in bounds.
+    struct vector* c = vector_new(M->n_row);
+    for(int i = 0; i < M->n_row; i++) {
+        DATA(c)[i] = MATRIX_IDX_INTO(M, i, col);
+    }
+    return c;
+}
+
+void matrix_copy_vector_into_row(struct matrix* M, struct vector* v, int row) {
+    //TODO: Check alignment.
+    for(int i = 0; i < v->length; i++) {
+        MATRIX_IDX_INTO(M, row, i) = DATA(v)[i];
+    }
+}
+
+void matrix_copy_vector_into_column(struct matrix* M, struct vector* v, int col) {
+    //TODO: Check alignment.
+    for(int i = 0; i < v->length; i++) {
+        MATRIX_IDX_INTO(M, i, col) = DATA(v)[i];
+    }
+}
+
 struct matrix* matrix_zeros(int n_row, int n_col) {
     struct matrix* M = matrix_new(n_row, n_col);
     for(int i = 0; i < n_row * n_col; i++) {
