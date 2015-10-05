@@ -124,8 +124,8 @@ int main(int argc, char** argv) {
 //    test_vector_view();
 //    test_vector_slice();
 //    test_matrix_zeros();
-//    test_matrix_identity();
-    test_matrix_from_array();
+    test_matrix_identity();
+//    test_matrix_from_array();
 
     return 0;
 }

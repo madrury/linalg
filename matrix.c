@@ -8,6 +8,11 @@
 #include "util.h"
 
 
+#define MATRIX_ROW(M, i) ((i) / (M->n_row))
+#define MATRIX_COL(M, i) ((i) % (M->n_row))
+#define MATRIX_IDX(M, r, c) (((r) * (M->n_col)) + (c))
+
+
 struct matrix* matrix_new(int n_row, int n_col) {
     // TODO: Check that n_row and n_col are reasonable.
     struct matrix* new_matrix = malloc(sizeof(struct matrix));
@@ -63,11 +68,8 @@ struct matrix* matrix_zeros(int n_row, int n_col) {
 
 struct matrix* matrix_identity(int size) {
     struct matrix* M = matrix_new(size, size);
-    int row, col;
     for(int i = 0; i < size * size; i++) {
-        row = i / size;
-        col = i % size;
-        if(row == col) {
+        if(MATRIX_ROW(M, i) == MATRIX_COL(M, i)) {
             DATA(M)[i] = 1;
         } else {
             DATA(M)[i] = 0;
