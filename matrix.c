@@ -39,12 +39,6 @@ struct matrix* matrix_from_array(double* data, int n_row, int n_col) {
     return M;
 }
 
-struct vector* matrix_row_view(struct matrix* M, int row) {
-    double* row_p = DATA(M) + (row * M->n_col);
-    struct vector* r = vector_new_view((struct linalg_obj*) M, row_p, M->n_col);
-    return r;
-}
-
 void matrix_free(struct matrix* M) {
     struct linalg_obj* mem_owner;
     if(OWNS_MEMORY(M)) {
@@ -63,6 +57,22 @@ void matrix_free(struct matrix* M) {
             raise_non_zero_reference_free_error();
         }
     }
+}
+
+struct vector* matrix_row_view(struct matrix* M, int row) {
+    //TODO: Check that row is in bounds.
+    double* row_p = DATA(M) + (row * M->n_col);
+    struct vector* r = vector_new_view((struct linalg_obj*) M, row_p, M->n_col);
+    return r;
+}
+
+struct vector* matrix_row_copy(struct matrix* M, int row) {
+    //TODO: Check that row is in bounds.
+    struct vector* r = vector_new(M->n_col);
+    for(int i = 0; i < M->n_col; i++) {
+        DATA(r)[i] = MATRIX_IDX_INTO(M, row, i);
+    }
+    return r;
 }
 
 struct matrix* matrix_zeros(int n_row, int n_col) {

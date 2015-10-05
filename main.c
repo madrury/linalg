@@ -150,6 +150,16 @@ void test_matrix_multiply_2() {
     matrix_free(Mleft); matrix_free(Mprod);
 }
 
+void test_matrix_row_copy() {
+    double D[] = {1.0, 2.0, 3.0,
+                  4.0, 5.0, 6.0,
+                  7.0, 8.0, 9.0};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct vector* r = matrix_row_copy(M, 1);
+    vector_print(r);
+    vector_free(r); matrix_free(M);
+}
+
 int main(int argc, char** argv) {
 
 //    test_vector_zeros();
@@ -160,7 +170,7 @@ int main(int argc, char** argv) {
 //    test_vector_add_into();
 //    test_vector_subtract();
 //    test_vector_subtract_into();
-    test_vector_normalize_into();
+//    test_vector_normalize_into();
 //    test_vector_view();
 //    test_vector_slice();
 //    test_matrix_zeros();
@@ -169,6 +179,7 @@ int main(int argc, char** argv) {
 //    test_matrix_transpose();
 //    test_matrix_multiply();
 //    test_matrix_multiply_2();
+    test_matrix_row_copy();
 
     return 0;
 }

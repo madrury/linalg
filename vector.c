@@ -9,6 +9,7 @@
 #include "util.h"
 
 struct vector* vector_new(int length) {
+    //TODO: Check that length is non-negative.
     struct vector* new_vector = malloc(sizeof(struct vector));
     check_memory((void*)new_vector);
 
@@ -24,6 +25,7 @@ struct vector* vector_new(int length) {
 }
 
 struct vector* vector_new_view(struct linalg_obj* parent, double* view, int length) {
+    //TODO: Check that length is non-negative.
     struct vector* new_vector = malloc(sizeof(struct vector));
     check_memory((void*)new_vector);
 
@@ -38,6 +40,7 @@ struct vector* vector_new_view(struct linalg_obj* parent, double* view, int leng
 }
 
 struct vector* vector_from_array(int length, double *data) {
+    //TODO: Check that length is non-negative.
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
         DATA(v)[i] = data[i];
@@ -130,6 +133,7 @@ void vector_add_into(struct vector* v1, struct vector* v2) {
 }
 
 struct vector* vector_normalize(struct vector* v) {
+    //TODO: Check norm is non-zero.
     struct vector* vnorm = vector_new(v->length);
     double norm = vector_norm(v);
     for(int i = 0; i < v->length; i++) {
@@ -139,6 +143,7 @@ struct vector* vector_normalize(struct vector* v) {
 }
 
 void vector_normalize_into(struct vector* v) {
+    //TODO: Check norm is non-zero.
     double norm_squared = vector_dot_product(v, v);
     double norm = sqrt(norm_squared);
     for(int i = 0; i < v->length; i++) {
