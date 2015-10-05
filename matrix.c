@@ -38,6 +38,12 @@ struct matrix* matrix_from_array(double* data, int n_row, int n_col) {
     return M;
 }
 
+struct vector* matrix_row_view(struct matrix* M, int row) {
+    double* row_p = DATA(M) + (row * M->n_col);
+    struct vector* r = vector_new_view((struct linalg_obj*) M, row_p, M->n_col);
+    return r;
+}
+
 void matrix_free(struct matrix* M) {
     struct linalg_obj* mem_owner;
     if(OWNS_MEMORY(M)) {
@@ -78,10 +84,12 @@ struct matrix* matrix_identity(int size) {
     return M;
 }
 
-struct vector* matrix_row_view(struct matrix* M, int row) {
-    double* row_p = DATA(M) + (row * M->n_col);
-    struct vector* r = vector_new_view((struct linalg_obj*) M, row_p, M->n_col);
-    return r;
+struct matrix* matrix_transpose(struct matrix* M) {
+    struct matrix* Mt = matrix_new(M->n_col, M->n_row);
+    for(int i = 0; i < M->n_row * M->n_col; i++) {
+         DATA(Mt)[i] = DATA(M)[MATRIX_IDX(M, MATRIX_COL(Mt, i), MATRIX_ROW(Mt, i))];
+    }
+    return Mt;
 }
 
 void matrix_print(struct matrix* M) {
