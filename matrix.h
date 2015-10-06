@@ -28,12 +28,12 @@ struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright);
 void           matrix_print(struct matrix*);
 
 
-//struct qr_decomp {
-//    struct matrix* q;
-//    struct matrix* r;
-//};
-//
-//struct qr_decomp* qr_decomp_new(struct matrix* M);
-//void              qr_decomp_free(struct qr_decomp* qr);
-//
-//struct qr_decomp* matrix_qr_decomposition(struct matrix* M);
+struct qr_decomp {
+    struct matrix* q;
+    struct matrix* r;
+};
+
+struct qr_decomp* qr_decomp_new(struct matrix* M);
+void              qr_decomp_free(struct qr_decomp* qr);
+
+struct qr_decomp* matrix_qr_decomposition(struct matrix* M);

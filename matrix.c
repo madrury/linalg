@@ -155,26 +155,46 @@ void matrix_print(struct matrix* M) {
 }
 
 
-//struct qr_decomp* qr_decomp_new(struct matrix* M) {
-//    struct qr_decomp*  qr = malloc(sizeof(struct qr_decomp));
-//    return qr;
-//}
-//
-//void qr_decomp_free(struct qr_decomp* qr) {
-//    matrix_free(qr->q);
-//    matrix_free(qr->r);
-//    free(qr);
-//}
-//
-//struct qr_decomp* matrix_qr_decomposition(struct matrix* M) {
-//    //TODO: Check that M is a square matrix.
-//    struct qr_decomp* qr = qr_decomp_new(struct matrix* M);
-//    struct matrix* q = matrix_new(M->n_row, M->n_row);
-//    struct matrix* r = matrix_new(M->n_row, M->n_row);
-//    struct matrix* Mtr = matrix_transpose(M);
-//    struct matrix* qtr = matrix_new(M->n_row, M->n_row);
-//    struct vector* current_projection;
-//    struct vector* current_unit_vector;
-//
-//
-//}
+struct qr_decomp* qr_decomp_new(struct matrix* M) {
+    struct qr_decomp*  qr = malloc(sizeof(struct qr_decomp));
+    return qr;
+}
+
+void qr_decomp_free(struct qr_decomp* qr) {
+    matrix_free(qr->q);
+    matrix_free(qr->r);
+    free(qr);
+}
+
+struct qr_decomp* matrix_qr_decomposition(struct matrix* M) {
+    //TODO: Check that M is a square matrix.
+    struct qr_decomp* qr = qr_decomp_new(M);
+    struct matrix* q = matrix_new(M->n_row, M->n_col);
+    struct matrix* r = matrix_new(M->n_row, M->n_col);
+    struct vector* current_column;
+    struct vector* current_unit_vector;
+    double current_dot_product;
+    double norm;
+    
+    for(int i = 0; i < M->n_col; i++) {
+        current_column = matrix_column_copy(M, i);
+        for(int j = 0; j < i; j++) {
+            // Do the projection math
+            current_unit_vector = matrix_column_copy(q, j);
+            current_dot_product = vector_dot_product(current_unit_vector, current_column);
+            vector_scalar_multiply_into(current_unit_vector, current_dot_product);
+            vector_subtract_into(current_column, current_unit_vector);
+            vector_free(current_unit_vector);
+            MATRIX_IDX_INTO(r, j, i) = current_dot_product;
+        }
+        norm = vector_norm(current_column);
+        MATRIX_IDX_INTO(r, i, i) = norm;
+        vector_normalize_into(current_column);
+        matrix_copy_vector_into_column(q, current_column, i);
+        vector_free(current_column);
+    }
+
+    qr->q = q; 
+    qr->r = r;
+    return qr;
+}

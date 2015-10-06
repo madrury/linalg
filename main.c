@@ -185,7 +185,29 @@ void test_matrix_copy_vector_into_column() {
     matrix_print(M);
     matrix_free(M); vector_free(v);
 }
-    
+
+void test_qr_decomp_identity() {
+    struct matrix* I = matrix_identity(3);
+    struct qr_decomp* qr = matrix_qr_decomposition(I);
+    matrix_print(qr->q);
+    matrix_print(qr->r);
+    qr_decomp_free(qr);
+}
+
+void test_qr_decomp() {
+    double D[] = {1, 1, 0,
+                  1, 0, 1,
+                  0, 1, 1};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct qr_decomp* qr = matrix_qr_decomposition(M);
+    printf("q: "); matrix_print(qr->q);
+    printf("r: "); matrix_print(qr->r);
+    struct matrix* P = matrix_multiply(qr->q, qr->r);
+    printf("q*r: "); matrix_print(P);
+    matrix_free(P); qr_decomp_free(qr);
+}
+
+
 int main(int argc, char** argv) {
 
 //    test_vector_zeros();
@@ -207,8 +229,10 @@ int main(int argc, char** argv) {
 //    test_matrix_multiply_2();
 //    test_matrix_row_copy();
 //    test_matrix_column_copy();
-    test_matrix_copy_vector_into_row();
-    test_matrix_copy_vector_into_column();
+//    test_matrix_copy_vector_into_row();
+//    test_matrix_copy_vector_into_column();
+//    test_qr_decomp_identity();
+    test_qr_decomp();
 
     return 0;
 }
