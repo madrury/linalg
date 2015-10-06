@@ -151,6 +151,20 @@ void vector_normalize_into(struct vector* v) {
     }
 }
 
+struct vector* vector_scalar_multiply(struct vector* v, double s) {
+    struct vector* w = vector_new(v->length);
+    for(int i = 0; i < v->length; i++) {
+        DATA(w)[i] = DATA(v)[i] * s
+    }
+    return w;
+}
+
+struct vector* vector_scalar_into(struct vector* v, double s) {
+    for(int i = 0; i < v->length; i++) {
+        DATA(v)[i] = DATA(v)[i] * s
+    }
+}
+
 double vector_dot_product(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     double dp = 0;

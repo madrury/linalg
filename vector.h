@@ -23,6 +23,9 @@ struct vector* vector_add(struct vector* v1, struct vector* v2);
 void           vector_add_into(struct vector* v1, struct vector* v2);
 struct vector* vector_normalize(struct vector* v);
 void           vector_normalize_into(struct vector* v);
+struct vector* vector_scalar_multiply(struct vector* v, double s);
+void           vector_scalar_multiply(struct vector* v, double s);
+
 
 double         vector_dot_product(struct vector* v1, struct vector* v2);
 double         vector_norm(struct vector* v);
