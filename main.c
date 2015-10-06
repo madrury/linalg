@@ -208,6 +208,19 @@ void test_qr_decomp() {
 }
 
 
+void test_qr_decomp_2() {
+    double D[] = {1, 2, 0,
+                  0, 1, 1,
+                  1, 0, 1};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct qr_decomp* qr = matrix_qr_decomposition(M);
+    printf("q: "); matrix_print(qr->q);
+    printf("r: "); matrix_print(qr->r);
+    struct matrix* P = matrix_multiply(qr->q, qr->r);
+    printf("q*r: "); matrix_print(P);
+    matrix_free(P); qr_decomp_free(qr);
+}
+
 int main(int argc, char** argv) {
 
 //    test_vector_zeros();
@@ -232,7 +245,8 @@ int main(int argc, char** argv) {
 //    test_matrix_copy_vector_into_row();
 //    test_matrix_copy_vector_into_column();
 //    test_qr_decomp_identity();
-    test_qr_decomp();
+//    test_qr_decomp();
+    test_qr_decomp_2();
 
     return 0;
 }
