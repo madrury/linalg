@@ -6,6 +6,7 @@
 #include "vector.h"
 #include "errors.h"
 #include "util.h"
+#include "linalg_obj.h"
 
 
 #define MATRIX_ROW(M, i) ((i) / (M->n_row))
