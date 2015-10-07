@@ -24,6 +24,7 @@ struct matrix* matrix_identity(int size);
 
 struct matrix* matrix_transpose(struct matrix* M);
 struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright);
+// struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v);
 
 void           matrix_print(struct matrix*);
 

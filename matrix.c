@@ -181,10 +181,9 @@ void qr_decomp_free(struct qr_decomp* qr) {
 }
 
 struct qr_decomp* matrix_qr_decomposition(struct matrix* M) {
-    //TODO: Check that M is a square matrix.
     struct qr_decomp* qr = qr_decomp_new(M);
     struct matrix* q = matrix_new(M->n_row, M->n_col);
-    struct matrix* r = matrix_zeros(M->n_row, M->n_col);
+    struct matrix* r = matrix_zeros(M->n_col, M->n_col);
     struct vector* current_column;
     struct vector* current_unit_vector;
     double current_dot_product;
