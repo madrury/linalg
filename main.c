@@ -150,6 +150,28 @@ void test_matrix_multiply_2() {
     matrix_free(Mleft); matrix_free(Mprod);
 }
 
+void test_matrix_vector_multiply_identity() {
+    struct matrix* I = matrix_identity(3);
+    double D[] = {1.0, 2.0, 3.0};
+    struct vector* v = vector_from_array(3, D);
+    struct vector* w = matrix_vector_multiply(I, v);
+    vector_print(w);
+    matrix_free(I); vector_free(v); vector_free(w);
+}
+
+void test_matrix_vector_multiply() {
+    double D[] = {1.0, 1.0, 0.0,
+                  0.0, 1.0, 0.0,
+                  0.0, 0.0, 0.0};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    double V[] = {1.0, 2.0, 3.0};
+    struct vector* v = vector_from_array(3, V);
+    struct vector* w = matrix_vector_multiply(M, v);
+    vector_print(w);
+    matrix_free(M); vector_free(v); vector_free(w);
+}
+
+
 void test_matrix_row_copy() {
     double D[] = {1.0, 2.0, 3.0,
                   4.0, 5.0, 6.0,
@@ -207,7 +229,6 @@ void test_qr_decomp() {
     matrix_free(P); qr_decomp_free(qr);
 }
 
-
 void test_qr_decomp_2() {
     double D[] = {1, 2, 0,
                   0, 1, 1,
@@ -254,7 +275,8 @@ int main(int argc, char** argv) {
 //    test_matrix_transpose();
 //    test_matrix_multiply();
 //    test_matrix_multiply_2();
-//    test_matrix_vector_multiply();
+    test_matrix_vector_multiply_identity();
+    test_matrix_vector_multiply();
 //    test_matrix_row_copy();
 //    test_matrix_column_copy();
 //    test_matrix_copy_vector_into_row();
@@ -262,7 +284,7 @@ int main(int argc, char** argv) {
 //    test_qr_decomp_identity();
 //    test_qr_decomp();
 //    test_qr_decomp_2();
-    test_qr_decomp_non_square();
+//    test_qr_decomp_non_square();
 
     return 0;
 }

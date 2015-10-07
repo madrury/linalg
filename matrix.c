@@ -143,19 +143,19 @@ struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
     return Mprod;
 }
 
-//struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
-//    //TODO: Check that dimensions work out.
-//    struct vector* w = vector_new(v->length);
-//    double sum;
-//    for(int i = 0; i < M->n_row, i++) {
-//        sum = 0;
-//        for(int j = 0; j < M->n_col; j++) {
-//            sum += MATRIX_IDX_INTO(M, i, j) * DATA(v)[j];
-//        }
-//        DATA(w)[i] = sum;
-//    }
-//    return w;
-//}
+struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
+    //TODO: Check that dimensions work out.
+    struct vector* w = vector_new(v->length);
+    double sum;
+    for(int i = 0; i < M->n_row; i++) {
+        sum = 0;
+        for(int j = 0; j < M->n_col; j++) {
+            sum += MATRIX_IDX_INTO(M, i, j) * DATA(v)[j];
+        }
+        DATA(w)[i] = sum;
+    }
+    return w;
+}
 
 void matrix_print(struct matrix* M) {
     struct vector* current_row;
