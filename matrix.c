@@ -127,7 +127,7 @@ struct matrix* matrix_transpose(struct matrix* M) {
 }
 
 struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
-    //TODO: Check that dimenstions are commensurate.
+    //TODO: Check that dimensions are commensurate.
     struct matrix* Mprod = matrix_new(Mleft->n_row, Mright->n_col);
     double sum;
     for(int i = 0; i < Mprod->n_row; i++) {
@@ -141,6 +141,20 @@ struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
     }
     return Mprod;
 }
+
+//struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
+//    //TODO: Check that dimensions work out.
+//    struct vector* w = vector_new(v->length);
+//    double sum;
+//    for(int i = 0; i < M->n_row, i++) {
+//        sum = 0;
+//        for(int j = 0; j < M->n_col; j++) {
+//            sum += MATRIX_IDX_INTO(M, i, j) * DATA(v)[j];
+//        }
+//        DATA(w)[i] = sum;
+//    }
+//    return w;
+//}
 
 void matrix_print(struct matrix* M) {
     struct vector* current_row;
@@ -170,7 +184,7 @@ struct qr_decomp* matrix_qr_decomposition(struct matrix* M) {
     //TODO: Check that M is a square matrix.
     struct qr_decomp* qr = qr_decomp_new(M);
     struct matrix* q = matrix_new(M->n_row, M->n_col);
-    struct matrix* r = matrix_new(M->n_row, M->n_col);
+    struct matrix* r = matrix_zeros(M->n_row, M->n_col);
     struct vector* current_column;
     struct vector* current_unit_vector;
     double current_dot_product;
