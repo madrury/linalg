@@ -2,6 +2,11 @@
 #include <stdbool.h>
 #include "linalg_obj.h"
 
+#ifndef _VECTOR_MACROS
+#define VECTOR_IDX_INTO(v, i) (DATA(v)[i])
+#endif
+
+
 struct vector {
     struct linalg_obj la_obj;
     int length;

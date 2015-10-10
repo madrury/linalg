@@ -43,7 +43,7 @@ struct vector* vector_from_array(int length, double *data) {
     //TODO: Check that length is non-negative.
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
-        DATA(v)[i] = data[i];
+        VECTOR_IDX_INTO(v, i) = data[i];
     }
     return v;
 }
@@ -71,7 +71,7 @@ void vector_free(struct vector* v) {
 struct vector* vector_zeros(int length) {
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
-        DATA(v)[i] = 0;
+        VECTOR_IDX_INTO(v, i) = 0;
     }
     return v;
 }
@@ -80,7 +80,7 @@ struct vector* vector_linspace(int length, double min, double max) {
     struct vector* v = vector_new(length);
     double step = (max - min) / (length - 1);
     for(int i = 0; i < v->length; i++) {
-        DATA(v)[i] = min + step*i;
+        VECTOR_IDX_INTO(v, i) = min + step*i;
     }
     return v;
 }
@@ -95,7 +95,7 @@ struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx) {
 struct vector* vector_copy(struct vector* v) {
     struct vector* w = vector_new(v->length);
     for(int i = 0; i < v->length; i++) {
-        DATA(w)[i] = DATA(v)[i];
+        VECTOR_IDX_INTO(w, i) = VECTOR_IDX_INTO(v, i);
     }
     return w;
 }
@@ -104,7 +104,7 @@ struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     struct vector* v = vector_new(v1->length);
     for(int i = 0; i < v->length; i++) {
-        DATA(v)[i] = DATA(v1)[i] - DATA(v2)[i];
+        VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v1, i) - VECTOR_IDX_INTO(v2, i);
     }
     return v;
 }
@@ -112,7 +112,7 @@ struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
 void vector_subtract_into(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     for(int i = 0; i < v1->length; i++) {
-        DATA(v1)[i] = DATA(v1)[i] - DATA(v2)[i];
+        VECTOR_IDX_INTO(v1, i) = VECTOR_IDX_INTO(v1, i) - VECTOR_IDX_INTO(v2, i);
     }
 }
 
@@ -120,7 +120,7 @@ struct vector* vector_add(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     struct vector* v = vector_new(v1->length);
     for(int i = 0; i < v->length; i++) {
-        DATA(v)[i] = DATA(v1)[i] + DATA(v2)[i];
+        VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v1, i) + VECTOR_IDX_INTO(v2, i);
     }
     return v;
 }
@@ -128,7 +128,7 @@ struct vector* vector_add(struct vector* v1, struct vector* v2) {
 void vector_add_into(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     for(int i = 0; i < v1->length; i++) {
-        DATA(v1)[i] = DATA(v1)[i] + DATA(v2)[i];
+        VECTOR_IDX_INTO(v1, i) = VECTOR_IDX_INTO(v1, i) + VECTOR_IDX_INTO(v2, i);
     }
 }
 
@@ -137,7 +137,7 @@ struct vector* vector_normalize(struct vector* v) {
     struct vector* vnorm = vector_new(v->length);
     double norm = vector_norm(v);
     for(int i = 0; i < v->length; i++) {
-        DATA(vnorm)[i] = DATA(v)[i] / norm;
+        VECTOR_IDX_INTO(vnorm, i) = VECTOR_IDX_INTO(v, i) / norm;
     }
     return vnorm;
 }
@@ -147,21 +147,21 @@ void vector_normalize_into(struct vector* v) {
     double norm_squared = vector_dot_product(v, v);
     double norm = sqrt(norm_squared);
     for(int i = 0; i < v->length; i++) {
-        DATA(v)[i] = DATA(v)[i] / norm;
+        VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v, i) / norm;
     }
 }
 
 struct vector* vector_scalar_multiply(struct vector* v, double s) {
     struct vector* w = vector_new(v->length);
     for(int i = 0; i < v->length; i++) {
-        DATA(w)[i] = DATA(v)[i] * s;
+        VECTOR_IDX_INTO(w, i) = VECTOR_IDX_INTO(v, i) * s;
     }
     return w;
 }
 
 void vector_scalar_multiply_into(struct vector* v, double s) {
     for(int i = 0; i < v->length; i++) {
-        DATA(v)[i] = DATA(v)[i] * s;
+        VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v, i) * s;
     }
 }
 
@@ -169,7 +169,7 @@ double vector_dot_product(struct vector* v1, struct vector* v2) {
     _vector_check_lengths(v1, v2);
     double dp = 0;
     for(int i = 0; i < v1->length; i++) {
-        dp += DATA(v1)[i] * DATA(v2)[i];
+        dp += VECTOR_IDX_INTO(v1, i) * VECTOR_IDX_INTO(v2, i);
     }
     return dp;
 }
@@ -183,14 +183,14 @@ void vector_print(struct vector* v) {
     if(v->length == 0) {
         printf("[]\n");
     } else if (v->length == 1) {
-        printf("[%.2f]\n", DATA(v)[0]);
+        printf("[%.2f]\n", VECTOR_IDX_INTO(v, 0));
     } else {
-        printf("[%.2f", DATA(v)[0]);
+        printf("[%.2f", VECTOR_IDX_INTO(v, 0));
         for(int i = 1; i < v->length - 1; i++) {
             printf(", ");
-            printf("%.2f", DATA(v)[i]);
+            printf("%.2f", VECTOR_IDX_INTO(v, i));
         }
-        printf(", %.2f]\n", DATA(v)[v->length - 1]);
+        printf(", %.2f]\n", VECTOR_IDX_INTO(v, v->length - 1));
     }
 }
 
