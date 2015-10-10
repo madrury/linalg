@@ -32,10 +32,11 @@ void           vector_normalize_into(struct vector* v);
 struct vector* vector_scalar_multiply(struct vector* v, double s);
 void           vector_scalar_multiply_into(struct vector* v, double s);
 
+bool           vector_equal(struct vector* v1, struct vector* v2, double tol);
 
 double         vector_dot_product(struct vector* v1, struct vector* v2);
 double         vector_norm(struct vector* v);
 
 void           vector_print(struct vector*);
 
-void           _vector_check_lengths(struct vector* v1, struct vector* v2);
+void _vector_check_lengths(struct vector* v1, struct vector* v2);

@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <math.h>
 #include "matrix.h"
 #include "vector.h"
 #include "errors.h"
@@ -149,6 +150,23 @@ struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
         VECTOR_IDX_INTO(w, i) = sum;
     }
     return w;
+}
+
+bool matrix_equal(struct matrix* M1, struct matrix* M2, double tol) {
+    if(M1->n_row != M2->n_row) {
+        return false;
+    }
+    if(M1->n_col != M2->n_col) {
+        return false;
+    }
+    for(int i = 0; i < M1->n_row; i++) {
+        for(int j = 0; j < M1->n_col; j++) {
+            if(fabs(MATRIX_IDX_INTO(M1, i, j) - MATRIX_IDX_INTO(M2, i, j)) > tol) {
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 void matrix_print(struct matrix* M) {

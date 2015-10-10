@@ -30,6 +30,15 @@ void test_vector_linspace() {
     vector_free(v3);
 }
 
+void test_vector_equal() {
+    double D[] = {1.0, 2.0, 3.0, 4.0, 5.0};
+    struct vector* v1 = vector_from_array(5, D);
+    struct vector* v2 = vector_from_array(5, D);
+    if(vector_equal(v1, v2, .01)) printf("Vectors are equal!\n");
+    vector_free(v1); vector_free(v2);
+
+}
+
 void test_vector_dot_product() {
     double D1[] = {1.0, 1.0, 1.0, 0.0, 0.0};
     struct vector* v1 = vector_from_array(5, D1);
@@ -117,6 +126,16 @@ void test_matrix_from_array() {
     struct matrix* M = matrix_from_array(D, 3, 3);
     matrix_print(M);
     matrix_free(M);
+}
+
+void test_matrix_equal() {
+    double D[] = {1.0, 2.0, 3.0,
+                  4.0, 5.0, 6.0,
+                  7.0, 8.0, 9.0};
+    struct matrix* M1 = matrix_from_array(D, 3, 3);
+    struct matrix* M2 = matrix_from_array(D, 3, 3);
+    if(matrix_equal(M1, M2, .01)) printf("Matricies are equal!\n");
+    matrix_free(M1); matrix_free(M2);
 }
 
 void test_matrix_transpose() {
@@ -261,6 +280,7 @@ int main(int argc, char** argv) {
 //    test_vector_zeros();
 //    test_vector_from_array();
 //    test_vector_linspace();
+    test_vector_equal();
 //    test_vector_dot_product();
 //    test_vector_add();
 //    test_vector_add_into();
@@ -269,18 +289,19 @@ int main(int argc, char** argv) {
 //    test_vector_normalize_into();
 //    test_vector_view();
 //    test_vector_slice();
-    test_matrix_zeros();
-    test_matrix_identity();
-    test_matrix_from_array();
-    test_matrix_transpose();
-    test_matrix_multiply();
-    test_matrix_multiply_2();
-    test_matrix_vector_multiply_identity();
-    test_matrix_vector_multiply();
-    test_matrix_row_copy();
-    test_matrix_column_copy();
-    test_matrix_copy_vector_into_row();
-    test_matrix_copy_vector_into_column();
+//    test_matrix_zeros();
+//    test_matrix_identity();
+//    test_matrix_from_array();
+    test_matrix_equal();
+//    test_matrix_transpose();
+//    test_matrix_multiply();
+//    test_matrix_multiply_2();
+//    test_matrix_vector_multiply_identity();
+//    test_matrix_vector_multiply();
+//    test_matrix_row_copy();
+//    test_matrix_column_copy();
+//    test_matrix_copy_vector_into_row();
+//    test_matrix_copy_vector_into_column();
 //    test_qr_decomp_identity();
 //    test_qr_decomp();
 //    test_qr_decomp_2();

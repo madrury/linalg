@@ -159,6 +159,18 @@ struct vector* vector_scalar_multiply(struct vector* v, double s) {
     return w;
 }
 
+bool vector_equal(struct vector* v1, struct vector* v2, double tol) {
+    if(v1->length != v2->length) {
+        return false;
+    }
+    for(int i = 0; i < v1->length; i++) {
+        if(fabs(VECTOR_IDX_INTO(v1, i) - VECTOR_IDX_INTO(v2, i)) > tol) {
+            return false;
+        }
+    }
+    return true;
+}
+
 void vector_scalar_multiply_into(struct vector* v, double s) {
     for(int i = 0; i < v->length; i++) {
         VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v, i) * s;
