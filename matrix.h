@@ -7,6 +7,16 @@ struct matrix {
     int n_col;
 };
 
+
+#ifndef _MATRIX_MACROS
+#define _MATRIX_MACROS
+#define MATRIX_ROW(M, i) ((i) / (M->n_row))
+#define MATRIX_COL(M, i) ((i) % (M->n_row))
+#define MATRIX_IDX(M, r, c) (((r) * (M->n_col)) + (c))
+#define MATRIX_IDX_INTO(M, r, c) (DATA(M)[MATRIX_IDX(M, r, c)])
+#endif
+
+
 struct matrix* matrix_new(int n_row, int n_col);
 struct matrix* matrix_from_array(double* data, int n_row, int n_col);
 void           matrix_free(struct matrix* M);

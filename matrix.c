@@ -9,12 +9,6 @@
 #include "linalg_obj.h"
 
 
-#define MATRIX_ROW(M, i) ((i) / (M->n_row))
-#define MATRIX_COL(M, i) ((i) % (M->n_row))
-#define MATRIX_IDX(M, r, c) (((r) * (M->n_col)) + (c))
-#define MATRIX_IDX_INTO(M, r, c) (DATA(M)[MATRIX_IDX(M, r, c)])
-
-
 struct matrix* matrix_new(int n_row, int n_col) {
     // TODO: Check that n_row and n_col are reasonable.
     struct matrix* new_matrix = malloc(sizeof(struct matrix));
@@ -71,7 +65,7 @@ struct vector* matrix_row_copy(struct matrix* M, int row) {
     //TODO: Check that row is in bounds.
     struct vector* r = vector_new(M->n_col);
     for(int i = 0; i < M->n_col; i++) {
-        DATA(r)[i] = MATRIX_IDX_INTO(M, row, i);
+        VECTOR_IDX_INTO(r, i) = MATRIX_IDX_INTO(M, row, i);
     }
     return r;
 }
@@ -80,7 +74,7 @@ struct vector* matrix_column_copy(struct matrix* M, int col) {
     //TODO: Check that column is in bounds.
     struct vector* c = vector_new(M->n_row);
     for(int i = 0; i < M->n_row; i++) {
-        DATA(c)[i] = MATRIX_IDX_INTO(M, i, col);
+        VECTOR_IDX_INTO(c, i) = MATRIX_IDX_INTO(M, i, col);
     }
     return c;
 }
@@ -88,14 +82,14 @@ struct vector* matrix_column_copy(struct matrix* M, int col) {
 void matrix_copy_vector_into_row(struct matrix* M, struct vector* v, int row) {
     //TODO: Check alignment.
     for(int i = 0; i < v->length; i++) {
-        MATRIX_IDX_INTO(M, row, i) = DATA(v)[i];
+        MATRIX_IDX_INTO(M, row, i) = VECTOR_IDX_INTO(v, i);
     }
 }
 
 void matrix_copy_vector_into_column(struct matrix* M, struct vector* v, int col) {
     //TODO: Check alignment.
     for(int i = 0; i < v->length; i++) {
-        MATRIX_IDX_INTO(M, i, col) = DATA(v)[i];
+        MATRIX_IDX_INTO(M, i, col) = VECTOR_IDX_INTO(v, i);
     }
 }
 
@@ -150,9 +144,9 @@ struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
     for(int i = 0; i < M->n_row; i++) {
         sum = 0;
         for(int j = 0; j < M->n_col; j++) {
-            sum += MATRIX_IDX_INTO(M, i, j) * DATA(v)[j];
+            sum += MATRIX_IDX_INTO(M, i, j) * VECTOR_IDX_INTO(v, j);
         }
-        DATA(w)[i] = sum;
+        VECTOR_IDX_INTO(w, i) = sum;
     }
     return w;
 }

@@ -3,6 +3,7 @@
 #include "linalg_obj.h"
 
 #ifndef _VECTOR_MACROS
+#define _VECTOR_MACROS
 #define VECTOR_IDX_INTO(v, i) (DATA(v)[i])
 #endif
 
