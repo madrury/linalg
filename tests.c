@@ -140,38 +140,27 @@ bool (*vector_tests[N_VECTOR_TESTS])(void) = {
 
 /* Unit tests for matrix module. */
 
-#define N_MATRIX_TESTS 17
-
 bool test_matrix_zeros() {
     struct matrix* M = matrix_zeros(3, 3);
-    matrix_print(M);
-    matrix_free(M);
-return true;}
+    double D[] = {0.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0,
+                  0.0, 0.0, 0.0};
+    struct matrix* res = matrix_from_array(D, 3, 3);
+    bool test = matrix_equal(M, res, .01);
+    matrix_free(M); matrix_free(res);
+    return test;
+}
 
 bool test_matrix_identity() {
-    struct matrix* M = matrix_identity(5);
-    matrix_print(M);
-    matrix_free(M);
-return true;}
-
-bool test_matrix_from_array() {
-    double D[] = {1.0, 2.0, 3.0,
-                  4.0, 5.0, 6.0,
-                  7.0, 8.0, 9.0};
-    struct matrix* M = matrix_from_array(D, 3, 3);
-    matrix_print(M);
-    matrix_free(M);
-return true;}
-
-bool test_matrix_equal() {
-    double D[] = {1.0, 2.0, 3.0,
-                  4.0, 5.0, 6.0,
-                  7.0, 8.0, 9.0};
-    struct matrix* M1 = matrix_from_array(D, 3, 3);
-    struct matrix* M2 = matrix_from_array(D, 3, 3);
-    if(matrix_equal(M1, M2, .01)) printf("Matricies are equal!\n");
-    matrix_free(M1); matrix_free(M2);
-return true;}
+    struct matrix* M = matrix_identity(3);
+    double D[] = {1.0, 0.0, 0.0,
+                  0.0, 1.0, 0.0,
+                  0.0, 0.0, 1.0};
+    struct matrix* res = matrix_from_array(D, 3, 3);
+    bool test = matrix_equal(M, res, .01);
+    matrix_free(M); matrix_free(res);
+    return test;
+}
 
 bool test_matrix_transpose() {
     double D[] = {1.0, 2.0, 3.0,
@@ -179,9 +168,14 @@ bool test_matrix_transpose() {
                   7.0, 8.0, 9.0};
     struct matrix* M = matrix_from_array(D, 3, 3);
     struct matrix* Mt = matrix_transpose(M);
-    matrix_print(Mt);
-    matrix_free(M); matrix_free(Mt);
-return true;}
+    double T[] = {1.0, 4.0, 7.0,
+                  2.0, 5.0, 8.0,
+                  3.0, 6.0, 9.0};
+    struct matrix* res = matrix_from_array(T, 3, 3);
+    bool test = matrix_equal(Mt, res, .01);
+    matrix_free(M); matrix_free(Mt); matrix_free(res);
+    return test;
+}
 
 bool test_matrix_multiply() {
     double D[] = {1.0, 2.0, 3.0,
@@ -190,9 +184,10 @@ bool test_matrix_multiply() {
     struct matrix* Mleft = matrix_from_array(D, 3, 3);
     struct matrix* Mright = matrix_identity(3);
     struct matrix* Mprod = matrix_multiply(Mleft, Mright);
-    matrix_print(Mprod);
+    bool test = matrix_equal(Mprod, Mleft, .01);
     matrix_free(Mleft); matrix_free(Mright); matrix_free(Mprod);
-return true;}
+    return test;
+}
 
 bool test_matrix_multiply_2() {
     double D[] = {1.0, 1.0, 0.0,
@@ -200,18 +195,24 @@ bool test_matrix_multiply_2() {
                   0.0, 0.0, 0.0};
     struct matrix* Mleft = matrix_from_array(D, 3, 3);
     struct matrix* Mprod = matrix_multiply(Mleft, Mleft);
-    matrix_print(Mprod);
-    matrix_free(Mleft); matrix_free(Mprod);
-return true;}
+    double R[] = {1.0, 2.0, 0.0,
+                  0.0, 1.0, 0.0,
+                  0.0, 0.0, 0.0};
+    struct matrix* res = matrix_from_array(R, 3, 3);
+    bool test = matrix_equal(Mprod, res, .01);
+    matrix_free(Mleft); matrix_free(Mprod); matrix_free(res);
+    return test;
+}
 
 bool test_matrix_vector_multiply_identity() {
     struct matrix* I = matrix_identity(3);
     double D[] = {1.0, 2.0, 3.0};
     struct vector* v = vector_from_array(3, D);
     struct vector* w = matrix_vector_multiply(I, v);
-    vector_print(w);
+    bool test = vector_equal(v, w, .01);
     matrix_free(I); vector_free(v); vector_free(w);
-return true;}
+    return test;
+}
 
 bool test_matrix_vector_multiply() {
     double D[] = {1.0, 1.0, 0.0,
@@ -221,9 +222,12 @@ bool test_matrix_vector_multiply() {
     double V[] = {1.0, 2.0, 3.0};
     struct vector* v = vector_from_array(3, V);
     struct vector* w = matrix_vector_multiply(M, v);
-    vector_print(w);
-    matrix_free(M); vector_free(v); vector_free(w);
-return true;}
+    double R[] = {3.0, 2.0, 0.0};
+    struct vector* res = vector_from_array(3, R);
+    bool test = vector_equal(w, res, .01);
+    matrix_free(M); vector_free(v); vector_free(w); vector_free(res);
+    return test;
+}
 
 bool test_matrix_row_copy() {
     double D[] = {1.0, 2.0, 3.0,
@@ -231,9 +235,12 @@ bool test_matrix_row_copy() {
                   7.0, 8.0, 9.0};
     struct matrix* M = matrix_from_array(D, 3, 3);
     struct vector* r = matrix_row_copy(M, 1);
-    vector_print(r);
-    vector_free(r); matrix_free(M);
-return true;}
+    double R[] = {4.0, 5.0, 6.0};
+    struct vector* res = vector_from_array(3, R);
+    bool test = vector_equal(r, res, .01);
+    vector_free(r); vector_free(res); matrix_free(M);
+    return test;
+}
 
 bool test_matrix_column_copy() {
     double D[] = {1.0, 2.0, 3.0,
@@ -241,33 +248,73 @@ bool test_matrix_column_copy() {
                   7.0, 8.0, 9.0};
     struct matrix* M = matrix_from_array(D, 3, 3);
     struct vector* c = matrix_column_copy(M, 1);
-    vector_print(c);
-    vector_free(c); matrix_free(M);
-return true;}
+    double C[] = {2.0, 5.0, 8.0};
+    struct vector* res = vector_from_array(3, C);
+    bool test = vector_equal(c, res, .01);
+    vector_free(c); vector_free(res); matrix_free(M);
+    return test;
+}
 
 bool test_matrix_copy_vector_into_row() {
     struct matrix* M = matrix_zeros(3, 3);
     struct vector* v = vector_linspace(3, 0, 1);
     matrix_copy_vector_into_row(M, v, 1);
-    matrix_print(M);
-    matrix_free(M); vector_free(v);
-return true;}
+    double D[] = {0.0, 0.0, 0.0,
+                  0.0, 0.5, 1.0,
+                  0.0, 0.0, 0.0};
+    struct matrix* res = matrix_from_array(D, 3, 3);
+    bool test = matrix_equal(M, res, .01);
+    matrix_free(M); matrix_free(res); vector_free(v);
+    return test;
+}
 
 bool test_matrix_copy_vector_into_column() {
     struct matrix* M = matrix_zeros(3, 3);
     struct vector* v = vector_linspace(3, 0, 1);
     matrix_copy_vector_into_column(M, v, 1);
-    matrix_print(M);
-    matrix_free(M); vector_free(v);
-return true;}
+    double D[] = {0.0, 0.0, 0.0,
+                  0.0, 0.5, 0.0,
+                  0.0, 1.0, 0.0};
+    struct matrix* res = matrix_from_array(D, 3, 3);
+    bool test = matrix_equal(M, res, .01);
+    matrix_free(M); matrix_free(res); vector_free(v);
+    return test;
+}
 
 bool test_qr_decomp_identity() {
     struct matrix* I = matrix_identity(3);
     struct qr_decomp* qr = matrix_qr_decomposition(I);
-    matrix_print(qr->q);
-    matrix_print(qr->r);
-    qr_decomp_free(qr);
-return true;}
+    bool q_correct = matrix_equal(I, qr->q, .01);
+    bool r_correct = matrix_equal(I, qr->r, .01);
+    qr_decomp_free(qr); matrix_free(I);
+    return q_correct && r_correct;
+}
+
+bool test_qr_decomp_recover_matrix() {
+    double D[] = {1, 1, 0,
+                  1, 0, 1,
+                  0, 1, 1};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct qr_decomp* qr = matrix_qr_decomposition(M);
+    struct matrix* P = matrix_multiply(qr->q, qr->r);
+    bool test = matrix_equal(M, P, .01);
+    matrix_free(P); qr_decomp_free(qr);
+    return test;
+}
+
+bool test_qr_decomp_orthogonal() {
+    double D[] = {1, 1, 0,
+                  1, 0, 1,
+                  0, 1, 1};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct qr_decomp* qr = matrix_qr_decomposition(M);
+    struct matrix* qt = matrix_transpose(qr->q);
+    struct matrix* P = matrix_multiply(qr->q, qt);
+    struct matrix* I = matrix_identity(3);
+    bool test = matrix_equal(P, I, .01);
+    matrix_free(P); matrix_free(qt); matrix_free(I); qr_decomp_free(qr);
+    return test;
+}
 
 bool test_qr_decomp() {
     double D[] = {1, 1, 0,
@@ -275,46 +322,52 @@ bool test_qr_decomp() {
                   0, 1, 1};
     struct matrix* M = matrix_from_array(D, 3, 3);
     struct qr_decomp* qr = matrix_qr_decomposition(M);
-    printf("q: "); matrix_print(qr->q);
-    printf("r: "); matrix_print(qr->r);
-    struct matrix* P = matrix_multiply(qr->q, qr->r);
-    printf("q*r: "); matrix_print(P);
-    matrix_free(P); qr_decomp_free(qr);
-return true;}
+    double Q[] = {1/sqrt(2), 1/sqrt(6), -1/sqrt(3),
+                  1/sqrt(2), -1/sqrt(6), 1/sqrt(3),
+                  0        , 2/sqrt(6), 1/sqrt(3)};
+    struct matrix* qres = matrix_from_array(Q, 3, 3);
+    double R[] = {2/sqrt(2), 1/sqrt(2), 1/sqrt(2),
+                  0        , 3/sqrt(6), 1/sqrt(6),
+                  0        , 0        , 2/sqrt(3)};
+    struct matrix* rres = matrix_from_array(R, 3, 3);
+    bool qtest = matrix_equal(qr->q, qres, .01);
+    bool rtest = matrix_equal(qr->r, rres, .01);
+    return qtest && rtest;
+}
 
-bool test_qr_decomp_2() {
-    double D[] = {1, 2, 0,
-                  0, 1, 1,
-                  1, 0, 1};
-    struct matrix* M = matrix_from_array(D, 3, 3);
-    struct qr_decomp* qr = matrix_qr_decomposition(M);
-    printf("q: "); matrix_print(qr->q);
-    printf("r: "); matrix_print(qr->r);
-    struct matrix* P = matrix_multiply(qr->q, qr->r);
-    printf("q*r: "); matrix_print(P);
-    matrix_free(P); qr_decomp_free(qr);
-return true;}
+//bool test_qr_decomp_2() {
+//    double D[] = {1, 2, 0,
+//                  0, 1, 1,
+//                  1, 0, 1};
+//    struct matrix* M = matrix_from_array(D, 3, 3);
+//    struct qr_decomp* qr = matrix_qr_decomposition(M);
+//    printf("q: "); matrix_print(qr->q);
+//    printf("r: "); matrix_print(qr->r);
+//    struct matrix* P = matrix_multiply(qr->q, qr->r);
+//    printf("q*r: "); matrix_print(P);
+//    matrix_free(P); qr_decomp_free(qr);
+//return true;}
+//
+//bool test_qr_decomp_non_square() {
+//    double D[] = {1, -1, 4,
+//                  1, 4, -2,
+//                  1, 4,  2,
+//                  1, -1, 0};
+//    struct matrix* M = matrix_from_array(D, 4, 3);
+//    struct qr_decomp* qr = matrix_qr_decomposition(M);
+//    printf("q: "); matrix_print(qr->q);
+//    printf("r: "); matrix_print(qr->r);
+//    struct matrix* P = matrix_multiply(qr->q, qr->r);
+//    printf("q*r: "); matrix_print(P);
+//    matrix_free(P); qr_decomp_free(qr);
+//return true;}
 
-bool test_qr_decomp_non_square() {
-    double D[] = {1, -1, 4,
-                  1, 4, -2,
-                  1, 4,  2,
-                  1, -1, 0};
-    struct matrix* M = matrix_from_array(D, 4, 3);
-    struct qr_decomp* qr = matrix_qr_decomposition(M);
-    printf("q: "); matrix_print(qr->q);
-    printf("r: "); matrix_print(qr->r);
-    struct matrix* P = matrix_multiply(qr->q, qr->r);
-    printf("q*r: "); matrix_print(P);
-    matrix_free(P); qr_decomp_free(qr);
-return true;}
 
+#define N_MATRIX_TESTS 15
 
 bool (*matrix_tests[N_MATRIX_TESTS])(void) = {
     test_matrix_zeros,
     test_matrix_identity,
-    test_matrix_from_array,
-    test_matrix_equal,
     test_matrix_transpose,
     test_matrix_multiply,
     test_matrix_multiply_2,
@@ -325,9 +378,11 @@ bool (*matrix_tests[N_MATRIX_TESTS])(void) = {
     test_matrix_copy_vector_into_row,
     test_matrix_copy_vector_into_column,
     test_qr_decomp_identity,
+    test_qr_decomp_recover_matrix,
+    test_qr_decomp_orthogonal,
     test_qr_decomp,
-    test_qr_decomp_2,
-    test_qr_decomp_non_square
+//    test_qr_decomp_2,
+//    test_qr_decomp_non_square
 };
 
 
