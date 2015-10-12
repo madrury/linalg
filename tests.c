@@ -298,7 +298,7 @@ bool test_qr_decomp_recover_matrix() {
     struct qr_decomp* qr = matrix_qr_decomposition(M);
     struct matrix* P = matrix_multiply(qr->q, qr->r);
     bool test = matrix_equal(M, P, .01);
-    matrix_free(P); qr_decomp_free(qr);
+    matrix_free(M); matrix_free(P); qr_decomp_free(qr);
     return test;
 }
 
@@ -312,7 +312,7 @@ bool test_qr_decomp_orthogonal() {
     struct matrix* P = matrix_multiply(qr->q, qt);
     struct matrix* I = matrix_identity(3);
     bool test = matrix_equal(P, I, .01);
-    matrix_free(P); matrix_free(qt); matrix_free(I); qr_decomp_free(qr);
+    matrix_free(M); qr_decomp_free(qr); matrix_free(qt); matrix_free(P); matrix_free(I);
     return test;
 }
 
@@ -332,6 +332,7 @@ bool test_qr_decomp() {
     struct matrix* rres = matrix_from_array(R, 3, 3);
     bool qtest = matrix_equal(qr->q, qres, .01);
     bool rtest = matrix_equal(qr->r, rres, .01);
+    matrix_free(M); qr_decomp_free(qr); matrix_free(qres); matrix_free(rres);
     return qtest && rtest;
 }
 
