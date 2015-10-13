@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <math.h>
+#include "tests.h"
 #include "vector.h"
 #include "matrix.h"
 
@@ -124,17 +125,17 @@ bool test_vector_normalize_into() {
 
 #define N_VECTOR_TESTS 10
 
-bool (*vector_tests[N_VECTOR_TESTS])(void) = {
-    test_vector_zeros,
-    test_vector_view,
-    test_vector_slice,
-    test_vector_linspace,
-    test_vector_dot_product,
-    test_vector_add,
-    test_vector_add_into,
-    test_vector_subtract,
-    test_vector_subtract_into,
-    test_vector_normalize_into,
+struct test vector_tests[] = {
+    {test_vector_zeros, "test_vector_zeros"},
+    {test_vector_view, "test_vector_view"},
+    {test_vector_slice, "test_vector_slice"},
+    {test_vector_linspace, "test_vector_linspace"},
+    {test_vector_dot_product, "test_vector_dot_product"},
+    {test_vector_add, "test_vector_add"},
+    {test_vector_add_into, "test_vector_add_into"},
+    {test_vector_subtract, "test_vector_subtract"},
+    {test_vector_subtract_into, "test_vector_subtract_into"},
+    {test_vector_normalize_into, "test_vector_normalize_into"}
 };
 
 
@@ -381,32 +382,32 @@ bool test_qr_decomp_non_square() {
 
 #define N_MATRIX_TESTS 17
 
-bool (*matrix_tests[N_MATRIX_TESTS])(void) = {
-    test_matrix_zeros,
-    test_matrix_identity,
-    test_matrix_transpose,
-    test_matrix_multiply,
-    test_matrix_multiply_2,
-    test_matrix_vector_multiply_identity,
-    test_matrix_vector_multiply,
-    test_matrix_row_copy,
-    test_matrix_column_copy,
-    test_matrix_copy_vector_into_row,
-    test_matrix_copy_vector_into_column,
-    test_qr_decomp_identity,
-    test_qr_decomp_recover_matrix,
-    test_qr_decomp_orthogonal,
-    test_qr_decomp,
-    test_qr_decomp_2,
-    test_qr_decomp_non_square
+struct test matrix_tests[] = {
+    {test_matrix_zeros, "test_matrix_zeros"},
+    {test_matrix_identity, "test_matrix_identity"},
+    {test_matrix_transpose, "test_matrix_transpose"},
+    {test_matrix_multiply, "test_matrix_multiply"},
+    {test_matrix_multiply_2, "test_matrix_multiply_2"},
+    {test_matrix_vector_multiply_identity, "test_matrix_vector_multiply_identity"},
+    {test_matrix_vector_multiply, "test_matrix_vector_multiply"},
+    {test_matrix_row_copy, "test_matrix_row_copy"},
+    {test_matrix_column_copy, "test_matrix_column_copy"},
+    {test_matrix_copy_vector_into_row, "test_matrix_copy_vector_into_row"},
+    {test_matrix_copy_vector_into_column, "test_matrix_copy_vector_into_column"},
+    {test_qr_decomp_identity, "test_qr_decomp_identity"},
+    {test_qr_decomp_recover_matrix, "test_qr_decomp_recover_matrix"},
+    {test_qr_decomp_orthogonal, "test_qr_decomp_orthogonal"},
+    {test_qr_decomp, "test_qr_decomp"},
+    {test_qr_decomp_2, "test_qr_decomp_2"},
+    {test_qr_decomp_non_square, "test_qr_decomp_non_square"}
 };
 
 
-void _display_result(bool test_success) {
+void _display_result(bool test_success, char* test_name) {
     if(test_success) {
         printf("*");
     } else {
-        printf("F");
+        printf("\nTest %s failed.\n", test_name);
     }
 }
 
@@ -419,12 +420,12 @@ void _display_final_result(all_success) {
     }
 }
 
-void run_tests(bool (*tests[])(void), int n_tests) {
+void run_tests(struct test tests[], int n_tests) {
     bool test_success;
     bool all_success = true;
     for(int i = 0; i < n_tests; i++) {
-        test_success = (*tests[i])();
-        _display_result(test_success);
+        test_success = (tests[i].test_f)();
+        _display_result(test_success, tests[i].name);
         all_success = all_success && test_success;
     }
     _display_final_result(all_success);
