@@ -336,35 +336,50 @@ bool test_qr_decomp() {
     return qtest && rtest;
 }
 
-//bool test_qr_decomp_2() {
-//    double D[] = {1, 2, 0,
-//                  0, 1, 1,
-//                  1, 0, 1};
-//    struct matrix* M = matrix_from_array(D, 3, 3);
-//    struct qr_decomp* qr = matrix_qr_decomposition(M);
-//    printf("q: "); matrix_print(qr->q);
-//    printf("r: "); matrix_print(qr->r);
-//    struct matrix* P = matrix_multiply(qr->q, qr->r);
-//    printf("q*r: "); matrix_print(P);
-//    matrix_free(P); qr_decomp_free(qr);
-//return true;}
-//
-//bool test_qr_decomp_non_square() {
-//    double D[] = {1, -1, 4,
-//                  1, 4, -2,
-//                  1, 4,  2,
-//                  1, -1, 0};
-//    struct matrix* M = matrix_from_array(D, 4, 3);
-//    struct qr_decomp* qr = matrix_qr_decomposition(M);
-//    printf("q: "); matrix_print(qr->q);
-//    printf("r: "); matrix_print(qr->r);
-//    struct matrix* P = matrix_multiply(qr->q, qr->r);
-//    printf("q*r: "); matrix_print(P);
-//    matrix_free(P); qr_decomp_free(qr);
-//return true;}
+bool test_qr_decomp_2() {
+    double D[] = {1, 2, 0,
+                  0, 1, 1,
+                  1, 0, 1};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct qr_decomp* qr = matrix_qr_decomposition(M);
+    double Q[] = {1/sqrt(2), 1/sqrt(3), -1/sqrt(6),
+                  0        , 1/sqrt(3),  2/sqrt(6),
+                  1/sqrt(2), -1/sqrt(3), 1/sqrt(6)};
+    struct matrix* qres = matrix_from_array(Q, 3, 3);
+    double R[] = {sqrt(2), sqrt(2), 1/sqrt(2),
+                  0      , sqrt(3),         0,
+                  0      , 0      , sqrt(6)/2};
+    struct matrix* rres = matrix_from_array(R, 3, 3);
+    bool qtest = matrix_equal(qr->q, qres, .01);
+    bool rtest = matrix_equal(qr->r, rres, .01);
+    matrix_free(M); qr_decomp_free(qr); matrix_free(qres); matrix_free(rres);
+    return qtest && rtest;
+}
+
+bool test_qr_decomp_non_square() {
+    double D[] = {1, -1, 4,
+                  1, 4, -2,
+                  1, 4,  2,
+                  1, -1, 0};
+    struct matrix* M = matrix_from_array(D, 4, 3);
+    struct qr_decomp* qr = matrix_qr_decomposition(M);
+    double Q[] = {0.5, -0.5,  0.5,
+                  0.5,  0.5, -0.5,
+                  0.5,  0.5,  0.5,
+                  0.5, -0.5, -0.5};
+    struct matrix* qres = matrix_from_array(Q, 4, 3);
+    double R[] = {2, 3,  2,
+                  0, 5, -2,
+                  0, 0,  4};
+    struct matrix* rres = matrix_from_array(R, 3, 3);
+    bool qtest = matrix_equal(qr->q, qres, .01);
+    bool rtest = matrix_equal(qr->r, rres, .01);
+    matrix_free(M); qr_decomp_free(qr); matrix_free(qres); matrix_free(rres);
+    return qtest && rtest;
+}
 
 
-#define N_MATRIX_TESTS 15
+#define N_MATRIX_TESTS 17
 
 bool (*matrix_tests[N_MATRIX_TESTS])(void) = {
     test_matrix_zeros,
@@ -382,8 +397,8 @@ bool (*matrix_tests[N_MATRIX_TESTS])(void) = {
     test_qr_decomp_recover_matrix,
     test_qr_decomp_orthogonal,
     test_qr_decomp,
-//    test_qr_decomp_2,
-//    test_qr_decomp_non_square
+    test_qr_decomp_2,
+    test_qr_decomp_non_square
 };
 
 
