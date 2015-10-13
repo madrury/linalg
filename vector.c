@@ -39,7 +39,7 @@ struct vector* vector_new_view(struct linalg_obj* parent, double* view, int leng
     return new_vector;
 }
 
-struct vector* vector_from_array(int length, double *data) {
+struct vector* vector_from_array(double* data, int length) {
     //TODO: Check that length is non-negative.
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
