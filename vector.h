@@ -39,4 +39,4 @@ double         vector_norm(struct vector* v);
 
 void           vector_print(struct vector*);
 
-void _vector_check_lengths(struct vector* v1, struct vector* v2);
+bool           vector_lengths_equal(struct vector* v1, struct vector* v2);

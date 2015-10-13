@@ -3,13 +3,15 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include <assert.h>
 #include "linalg_obj.h"
 #include "vector.h"
 #include "errors.h"
 #include "util.h"
 
 struct vector* vector_new(int length) {
-    //TODO: Check that length is non-negative.
+    assert(length >= 0);
+
     struct vector* new_vector = malloc(sizeof(struct vector));
     check_memory((void*)new_vector);
 
@@ -25,7 +27,18 @@ struct vector* vector_new(int length) {
 }
 
 struct vector* vector_new_view(struct linalg_obj* parent, double* view, int length) {
-    //TODO: Check that length is non-negative.
+    assert(length >= 0);
+    /* Check that pointers to the beginning and end of view vector live
+       within the data segment of the parent object.
+
+       This doesn't work because matricies have no length.  This could be
+       a property of linalg_obj, but then a macro would be needed to
+       make the lookup type generic.
+       
+    assert(DATA(parent) <= view && view < DATA(parent) + parent->length);
+    assert(view + length <= DATA(parent) + parent->length);
+    */
+
     struct vector* new_vector = malloc(sizeof(struct vector));
     check_memory((void*)new_vector);
 
@@ -40,7 +53,7 @@ struct vector* vector_new_view(struct linalg_obj* parent, double* view, int leng
 }
 
 struct vector* vector_from_array(double* data, int length) {
-    //TODO: Check that length is non-negative.
+    assert(length != 0);
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
         VECTOR_IDX_INTO(v, i) = data[i];
@@ -77,6 +90,8 @@ struct vector* vector_zeros(int length) {
 }
 
 struct vector* vector_linspace(int length, double min, double max) {
+    assert(min <= max);
+    assert(length > 1);
     struct vector* v = vector_new(length);
     double step = (max - min) / (length - 1);
     for(int i = 0; i < v->length; i++) {
@@ -86,6 +101,7 @@ struct vector* vector_linspace(int length, double min, double max) {
 }
 
 struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx) {
+    assert(begin_idx <= end_idx);
     int new_vector_length = end_idx - begin_idx;
     double* begin_ptr = DATA(v) + begin_idx;
     struct vector* w = vector_new_view((struct linalg_obj*) v, begin_ptr, new_vector_length);
@@ -101,7 +117,7 @@ struct vector* vector_copy(struct vector* v) {
 }
 
 struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
-    _vector_check_lengths(v1, v2);
+    assert(vector_lengths_equal(v1, v2));
     struct vector* v = vector_new(v1->length);
     for(int i = 0; i < v->length; i++) {
         VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v1, i) - VECTOR_IDX_INTO(v2, i);
@@ -110,14 +126,14 @@ struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
 }
 
 void vector_subtract_into(struct vector* v1, struct vector* v2) {
-    _vector_check_lengths(v1, v2);
+    assert(vector_lengths_equal(v1, v2));
     for(int i = 0; i < v1->length; i++) {
         VECTOR_IDX_INTO(v1, i) = VECTOR_IDX_INTO(v1, i) - VECTOR_IDX_INTO(v2, i);
     }
 }
 
 struct vector* vector_add(struct vector* v1, struct vector* v2) {
-    _vector_check_lengths(v1, v2);
+    assert(vector_lengths_equal(v1, v2));
     struct vector* v = vector_new(v1->length);
     for(int i = 0; i < v->length; i++) {
         VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v1, i) + VECTOR_IDX_INTO(v2, i);
@@ -126,16 +142,16 @@ struct vector* vector_add(struct vector* v1, struct vector* v2) {
 }
 
 void vector_add_into(struct vector* v1, struct vector* v2) {
-    _vector_check_lengths(v1, v2);
+    assert(vector_lengths_equal(v1, v2));
     for(int i = 0; i < v1->length; i++) {
         VECTOR_IDX_INTO(v1, i) = VECTOR_IDX_INTO(v1, i) + VECTOR_IDX_INTO(v2, i);
     }
 }
 
 struct vector* vector_normalize(struct vector* v) {
-    //TODO: Check norm is non-zero.
     struct vector* vnorm = vector_new(v->length);
     double norm = vector_norm(v);
+    assert(norm != 0);
     for(int i = 0; i < v->length; i++) {
         VECTOR_IDX_INTO(vnorm, i) = VECTOR_IDX_INTO(v, i) / norm;
     }
@@ -143,9 +159,8 @@ struct vector* vector_normalize(struct vector* v) {
 }
 
 void vector_normalize_into(struct vector* v) {
-    //TODO: Check norm is non-zero.
-    double norm_squared = vector_dot_product(v, v);
-    double norm = sqrt(norm_squared);
+    double norm = vector_norm(v);
+    assert(norm != 0);
     for(int i = 0; i < v->length; i++) {
         VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v, i) / norm;
     }
@@ -178,7 +193,7 @@ void vector_scalar_multiply_into(struct vector* v, double s) {
 }
 
 double vector_dot_product(struct vector* v1, struct vector* v2) {
-    _vector_check_lengths(v1, v2);
+    assert(vector_lengths_equal(v1, v2));
     double dp = 0;
     for(int i = 0; i < v1->length; i++) {
         dp += VECTOR_IDX_INTO(v1, i) * VECTOR_IDX_INTO(v2, i);
@@ -206,8 +221,6 @@ void vector_print(struct vector* v) {
     }
 }
 
-void _vector_check_lengths(struct vector* v1, struct vector* v2) {
-    if(v1->length != v2->length) {
-        raise_non_commensurate_vector_error();
-    }
+bool vector_lengths_equal(struct vector* v1, struct vector* v2) {
+    return (v1->length == v2->length);
 }
