@@ -5,6 +5,7 @@
 #include "tests.h"
 #include "vector.h"
 #include "matrix.h"
+#include "linsolve.h"
 
 
 /* Unit tests for vector module. */
@@ -154,10 +155,10 @@ bool test_matrix_zeros() {
 
 bool test_matrix_identity() {
     struct matrix* M = matrix_identity(3);
-    double D[] = {1.0, 0.0, 0.0,
+    double I[] = {1.0, 0.0, 0.0,
                   0.0, 1.0, 0.0,
                   0.0, 0.0, 1.0};
-    struct matrix* res = matrix_from_array(D, 3, 3);
+    struct matrix* res = matrix_from_array(I, 3, 3);
     bool test = matrix_equal(M, res, .01);
     matrix_free(M); matrix_free(res);
     return test;
@@ -403,6 +404,25 @@ struct test matrix_tests[] = {
 };
 
 
+// Linear lover tests
+
+bool test_solve_qr_identity() {
+    struct matrix* I = matrix_identity(3);
+    double V[] = {1.0, 2.0, 3.0};
+    struct vector* v = vector_from_array(V, 3);
+    struct vector* s = linsolve_qr(I, v);
+    bool test = vector_equal(s, v, .01);
+    vector_free(v); vector_free(s); matrix_free(I);
+    return test;
+}
+
+
+#define N_LINSOLVE_TESTS 1
+
+struct test linsolve_tests[] = {
+    {test_solve_qr_identity, "test_solve_qr_identity"},
+};
+
 void _display_result(bool test_success, char* test_name) {
     if(test_success) {
         printf("*");
@@ -434,4 +454,5 @@ void run_tests(struct test tests[], int n_tests) {
 void run_all() {
     run_tests(vector_tests, N_VECTOR_TESTS);
     run_tests(matrix_tests, N_MATRIX_TESTS);
+    run_tests(linsolve_tests, N_LINSOLVE_TESTS);
 }
