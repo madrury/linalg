@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <math.h>
+#include <assert.h>
 #include "matrix.h"
 #include "vector.h"
 #include "errors.h"
@@ -11,7 +12,7 @@
 
 
 struct matrix* matrix_new(int n_row, int n_col) {
-    // TODO: Check that n_row and n_col are reasonable.
+    assert(n_row >= 1 && n_col >= 1);
     struct matrix* new_matrix = malloc(sizeof(struct matrix));
     check_memory((void*)new_matrix);
 
@@ -28,6 +29,7 @@ struct matrix* matrix_new(int n_row, int n_col) {
 }
 
 struct matrix* matrix_from_array(double* data, int n_row, int n_col) {
+    assert(n_row >= 1 && n_col >= 1);
     struct matrix* M = matrix_new(n_row, n_col);
     for(int i = 0; i < n_row * n_col; i++) {
         DATA(M)[i] = data[i];
@@ -56,14 +58,14 @@ void matrix_free(struct matrix* M) {
 }
 
 struct vector* matrix_row_view(struct matrix* M, int row) {
-    //TODO: Check that row is in bounds.
+    assert(0 <= row <= M->n_row - 1);
     double* row_p = DATA(M) + (row * M->n_col);
     struct vector* r = vector_new_view((struct linalg_obj*) M, row_p, M->n_col);
     return r;
 }
 
 struct vector* matrix_row_copy(struct matrix* M, int row) {
-    //TODO: Check that row is in bounds.
+    assert(0 <= row <= M->n_row - 1);
     struct vector* r = vector_new(M->n_col);
     for(int i = 0; i < M->n_col; i++) {
         VECTOR_IDX_INTO(r, i) = MATRIX_IDX_INTO(M, row, i);
@@ -72,7 +74,7 @@ struct vector* matrix_row_copy(struct matrix* M, int row) {
 }
 
 struct vector* matrix_column_copy(struct matrix* M, int col) {
-    //TODO: Check that column is in bounds.
+    assert(0 <= col <= M->n_col - 1);
     struct vector* c = vector_new(M->n_row);
     for(int i = 0; i < M->n_row; i++) {
         VECTOR_IDX_INTO(c, i) = MATRIX_IDX_INTO(M, i, col);
@@ -81,20 +83,21 @@ struct vector* matrix_column_copy(struct matrix* M, int col) {
 }
 
 void matrix_copy_vector_into_row(struct matrix* M, struct vector* v, int row) {
-    //TODO: Check alignment.
+    assert(M->n_col == v->length);
     for(int i = 0; i < v->length; i++) {
         MATRIX_IDX_INTO(M, row, i) = VECTOR_IDX_INTO(v, i);
     }
 }
 
 void matrix_copy_vector_into_column(struct matrix* M, struct vector* v, int col) {
-    //TODO: Check alignment.
+    assert(M->n_row == v->length);
     for(int i = 0; i < v->length; i++) {
         MATRIX_IDX_INTO(M, i, col) = VECTOR_IDX_INTO(v, i);
     }
 }
 
 struct matrix* matrix_zeros(int n_row, int n_col) {
+    assert(n_row >= 1 && n_col >= 1);
     struct matrix* M = matrix_new(n_row, n_col);
     for(int i = 0; i < n_row * n_col; i++) {
         DATA(M)[i] = 0;
@@ -103,6 +106,7 @@ struct matrix* matrix_zeros(int n_row, int n_col) {
 }
 
 struct matrix* matrix_identity(int size) {
+    assert(size >= 1);
     struct matrix* M = matrix_new(size, size);
     for(int i = 0; i < size * size; i++) {
         if(MATRIX_ROW(M, i) == MATRIX_COL(M, i)) {
@@ -123,7 +127,7 @@ struct matrix* matrix_transpose(struct matrix* M) {
 }
 
 struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
-    //TODO: Check that dimensions are commensurate.
+    assert(Mleft->n_col == Mright->n_row);
     struct matrix* Mprod = matrix_new(Mleft->n_row, Mright->n_col);
     double sum;
     for(int i = 0; i < Mprod->n_row; i++) {
@@ -139,7 +143,7 @@ struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
 }
 
 struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
-    //TODO: Check that dimensions work out.
+    assert(M->n_col == v->length);
     struct vector* w = vector_new(v->length);
     double sum;
     for(int i = 0; i < M->n_row; i++) {
