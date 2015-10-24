@@ -10,10 +10,8 @@ struct vector* solve_upper_triangular(struct matrix* M, struct vector* v) {
     struct vector* solution = vector_new(n_eq);
     float back_substitute;
 
-    VECTOR_IDX_INTO(solution, n_eq - 1)
-        = VECTOR_IDX_INTO(v, n_eq - 1) / MATRIX_IDX_INTO(M, n_eq - 1, n_eq - 1);
     // Loop over equations
-    for(int i = n_eq - 2; i >= 0; i--) {
+    for(int i = n_eq - 1; i >= 0; i--) {
         // Back substitute already solved for coordiantes into the current
         // equation.
         back_substitute = 0;
