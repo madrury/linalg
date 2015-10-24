@@ -404,7 +404,7 @@ struct test matrix_tests[] = {
 };
 
 
-// Linear lover tests
+/* Unit tests for the linsolve module */
 
 bool test_solve_qr_identity() {
     struct matrix* I = matrix_identity(3);
@@ -416,12 +416,46 @@ bool test_solve_qr_identity() {
     return test;
 }
 
+bool test_solve_qr_upper_triangular() {
+    double M[] = {1.0, 1.0, 1.0,
+                  0.0, 1.0, 1.0,
+                  0.0, 0.0, 1.0};
+    struct matrix* m = matrix_from_array(M, 3, 3);
+    double V[] = {3.0, 2.0, 1.0};
+    struct vector* v = vector_from_array(V, 3);
+    struct vector* s = linsolve_qr(m, v);
+    double R[] = {1.0, 1.0, 1.0};
+    struct vector* res = vector_from_array(R, 3);
+    bool test = vector_equal(s, res, .01);
+    vector_free(v); vector_free(s); vector_free(res); matrix_free(m);
+    return test;
+}
 
-#define N_LINSOLVE_TESTS 1
+bool test_solve_qr_general() {
+    double M[] = {1.0,  2.0,  3.0,
+                  2.0, -4.0,  6.0,
+                  3.0, -9.0,  -3.0};
+    struct matrix* m = matrix_from_array(M, 3, 3);
+    double V[] = {5.0, 18.0, 6.0};
+    struct vector* v = vector_from_array(V, 3);
+    struct vector* s = linsolve_qr(m, v);
+    double R[] = {1.0, -1.0, 2.0};
+    struct vector* res = vector_from_array(R, 3);
+    bool test = vector_equal(s, res, .01);
+    vector_free(v); vector_free(s); vector_free(res); matrix_free(m);
+    return test;
+}
+
+
+#define N_LINSOLVE_TESTS 3
 
 struct test linsolve_tests[] = {
     {test_solve_qr_identity, "test_solve_qr_identity"},
+    {test_solve_qr_upper_triangular, "test_solve_qr_upper_triangular"},
+    {test_solve_qr_general, "test_solve_qr_general"},
 };
+
+// Testing setup.
 
 void _display_result(bool test_success, char* test_name) {
     if(test_success) {
