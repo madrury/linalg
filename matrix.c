@@ -182,7 +182,7 @@ struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
 }
 
 struct vector* matrix_vector_multiply_Mtv(struct matrix* M, struct vector* v) {
-    assert(M->n_col == v->length);
+    assert(M->n_row == v->length);
     struct vector* w = vector_zeros(v->length);
     for(int j = 0; j < M->n_row; j++) {
         for(int i = 0; i < M->n_col; i++) {
