@@ -36,6 +36,7 @@ struct matrix* matrix_transpose(struct matrix* M);
 struct matrix* matrix_multiply_cache(struct matrix* Mleft, struct matrix* Mright, int cache);
 struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright);
 struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v);
+struct vector* matrix_vector_multiply_Mtv(struct matrix* M, struct vector* v);
 
 bool           matrix_equal(struct matrix* M1, struct matrix* M2, double tol);
 

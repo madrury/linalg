@@ -219,12 +219,27 @@ bool test_matrix_vector_multiply_identity() {
 bool test_matrix_vector_multiply() {
     double D[] = {1.0, 1.0, 0.0,
                   0.0, 1.0, 0.0,
-                  0.0, 0.0, 0.0};
+                  0.0, 0.0, 1.0};
     struct matrix* M = matrix_from_array(D, 3, 3);
     double V[] = {1.0, 2.0, 3.0};
     struct vector* v = vector_from_array(V, 3);
     struct vector* w = matrix_vector_multiply(M, v);
-    double R[] = {3.0, 2.0, 0.0};
+    double R[] = {3.0, 2.0, 3.0};
+    struct vector* res = vector_from_array(R, 3);
+    bool test = vector_equal(w, res, .01);
+    matrix_free(M); vector_free(v); vector_free(w); vector_free(res);
+    return test;
+}
+
+bool test_matrix_vector_multiply_Mtv() {
+    double D[] = {1.0, 1.0, 0.0,
+                  0.0, 1.0, 0.0,
+                  0.0, 0.0, 0.0};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    double V[] = {1.0, 2.0, 3.0};
+    struct vector* v = vector_from_array(V, 3);
+    struct vector* w = matrix_vector_multiply_Mtv(M, v);
+    double R[] = {1.0, 3.0, 0.0};
     struct vector* res = vector_from_array(R, 3);
     bool test = vector_equal(w, res, .01);
     matrix_free(M); vector_free(v); vector_free(w); vector_free(res);
@@ -381,7 +396,7 @@ bool test_qr_decomp_non_square() {
 }
 
 
-#define N_MATRIX_TESTS 17
+#define N_MATRIX_TESTS 18
 
 struct test matrix_tests[] = {
     {test_matrix_zeros, "test_matrix_zeros"},
@@ -391,6 +406,7 @@ struct test matrix_tests[] = {
     {test_matrix_multiply_2, "test_matrix_multiply_2"},
     {test_matrix_vector_multiply_identity, "test_matrix_vector_multiply_identity"},
     {test_matrix_vector_multiply, "test_matrix_vector_multiply"},
+    {test_matrix_vector_multiply_Mtv, "test_matrix_vector_multiply_Mtv"},
     {test_matrix_row_copy, "test_matrix_row_copy"},
     {test_matrix_column_copy, "test_matrix_column_copy"},
     {test_matrix_copy_vector_into_row, "test_matrix_copy_vector_into_row"},

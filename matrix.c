@@ -181,6 +181,17 @@ struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
     return w;
 }
 
+struct vector* matrix_vector_multiply_Mtv(struct matrix* M, struct vector* v) {
+    assert(M->n_col == v->length);
+    struct vector* w = vector_zeros(v->length);
+    for(int j = 0; j < M->n_row; j++) {
+        for(int i = 0; i < M->n_col; i++) {
+            VECTOR_IDX_INTO(w, i) += MATRIX_IDX_INTO(M, j, i) * VECTOR_IDX_INTO(v, j);
+        }
+    }
+    return w;
+}
+
 bool matrix_equal(struct matrix* M1, struct matrix* M2, double tol) {
     if(M1->n_row != M2->n_row) {
         return false;

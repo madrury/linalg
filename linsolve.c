@@ -25,11 +25,9 @@ struct vector* solve_upper_triangular(struct matrix* M, struct vector* v) {
 }
 
 struct vector* linsolve_qr(struct matrix* M, struct vector* v) {
-    //TODO: Check matrix vector alignment
+    assert(M->n_row == v->length);
     struct qr_decomp* qr = matrix_qr_decomposition(M);
-    struct matrix* q_t = matrix_transpose(qr->q);
-    struct vector* rhs = matrix_vector_multiply(q_t, v);
-    matrix_free(q_t);
+    struct vector* rhs = matrix_vector_multiply_Mtv(qr->q, v);
     struct vector* solution = solve_upper_triangular(qr->r, rhs);
     vector_free(rhs);
     qr_decomp_free(qr);
