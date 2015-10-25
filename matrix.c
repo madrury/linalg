@@ -126,17 +126,42 @@ struct matrix* matrix_transpose(struct matrix* M) {
     return Mt;
 }
 
+/* An attempt at a cache blocking algorithm.  I couldn't get this to run any
+   faster than the naive algorithm with the j-k loop intercahnge.  Not sure
+   what I am doing wrong at this point.
+*/
+struct matrix* matrix_multiply_cache(struct matrix* Mleft, struct matrix* Mright, int cache) {
+    assert(Mleft->n_col == Mright->n_row);
+    struct matrix* Mprod = matrix_zeros(Mleft->n_row, Mright->n_col);
+    // Cache blocking loops.
+    for(int ii = 0; ii < Mprod->n_row; ii += cache) {
+        for(int kk = 0; kk < Mleft->n_col; kk += cache) {
+            for(int jj = 0; jj < Mprod->n_col; jj += cache) {
+                // Matrix multiplication loops.
+                for(int i = ii; i <  ii + cache && i < Mprod->n_row; i++) {
+                    for(int k = kk; k < kk + cache && k < Mleft->n_col; k++) {
+                        for(int j = jj; j < jj + cache && j < Mprod->n_col; j++) {
+                            MATRIX_IDX_INTO(Mprod, i, j) +=
+                                MATRIX_IDX_INTO(Mleft, i, k) * MATRIX_IDX_INTO(Mright, k, j);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return Mprod;
+}
+
+/* The order of the loops i-k-j gives good cache usage. */
 struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
     assert(Mleft->n_col == Mright->n_row);
-    struct matrix* Mprod = matrix_new(Mleft->n_row, Mright->n_col);
-    double sum;
+    struct matrix* Mprod = matrix_zeros(Mleft->n_row, Mright->n_col);
     for(int i = 0; i < Mprod->n_row; i++) {
-        for(int j = 0; j < Mprod->n_col; j++) {
-            sum = 0;
-            for(int k = 0; k < Mleft->n_col; k++) {
-                sum += MATRIX_IDX_INTO(Mleft, i, k) * MATRIX_IDX_INTO(Mright, k, j);
+        for(int k = 0; k < Mleft->n_col; k++) {
+            for(int j = 0; j < Mprod->n_col; j++) {
+                MATRIX_IDX_INTO(Mprod, i, j) +=
+                    MATRIX_IDX_INTO(Mleft, i, k) * MATRIX_IDX_INTO(Mright, k, j);
             }
-            MATRIX_IDX_INTO(Mprod, i, j) = sum;
         }
     }
     return Mprod;
