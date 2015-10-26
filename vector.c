@@ -89,6 +89,9 @@ struct vector* vector_zeros(int length) {
     return v;
 }
 
+/* Construct a vector of equally spaced points within the closed
+   interval [min, max].
+*/
 struct vector* vector_linspace(int length, double min, double max) {
     assert(min <= max);
     assert(length > 1);
@@ -100,6 +103,10 @@ struct vector* vector_linspace(int length, double min, double max) {
     return v;
 }
 
+/* Construct a view into a segement of a vector.  The returned vector is
+   a reference to a segment of data contained in the vector v, with left
+   index begin_idx and right index (excluded) end_idx.
+*/
 struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx) {
     assert(begin_idx <= end_idx);
     int new_vector_length = end_idx - begin_idx;
