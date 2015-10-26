@@ -181,7 +181,7 @@ bool test_matrix_transpose() {
     return test;
 }
 
-bool test_matrix_multiply() {
+bool test_matrix_multiply_identity() {
     double D[] = {1.0, 2.0, 3.0,
                   4.0, 5.0, 6.0,
                   7.0, 8.0, 9.0};
@@ -193,7 +193,7 @@ bool test_matrix_multiply() {
     return test;
 }
 
-bool test_matrix_multiply_2() {
+bool test_matrix_multiply() {
     double D[] = {1.0, 1.0, 0.0,
                   0.0, 1.0, 0.0,
                   0.0, 0.0, 0.0};
@@ -201,6 +201,21 @@ bool test_matrix_multiply_2() {
     struct matrix* Mprod = matrix_multiply(Mleft, Mleft);
     double R[] = {1.0, 2.0, 0.0,
                   0.0, 1.0, 0.0,
+                  0.0, 0.0, 0.0};
+    struct matrix* res = matrix_from_array(R, 3, 3);
+    bool test = matrix_equal(Mprod, res, .01);
+    matrix_free(Mleft); matrix_free(Mprod); matrix_free(res);
+    return test;
+}
+
+bool test_matrix_multiply_MtN() {
+    double D[] = {1.0, 1.0, 0.0,
+                  0.0, 1.0, 0.0,
+                  0.0, 0.0, 0.0};
+    struct matrix* Mleft = matrix_from_array(D, 3, 3);
+    struct matrix* Mprod = matrix_multiply_MtN(Mleft, Mleft);
+    double R[] = {1.0, 1.0, 0.0,
+                  1.0, 2.0, 0.0,
                   0.0, 0.0, 0.0};
     struct matrix* res = matrix_from_array(R, 3, 3);
     bool test = matrix_equal(Mprod, res, .01);
@@ -411,14 +426,15 @@ bool test_qr_decomp_random() {
 }
 
 
-#define N_MATRIX_TESTS 19
+#define N_MATRIX_TESTS 20
 
 struct test matrix_tests[] = {
     {test_matrix_zeros, "test_matrix_zeros"},
     {test_matrix_identity, "test_matrix_identity"},
     {test_matrix_transpose, "test_matrix_transpose"},
+    {test_matrix_multiply_identity, "test_matrix_multiply_identity"},
     {test_matrix_multiply, "test_matrix_multiply"},
-    {test_matrix_multiply_2, "test_matrix_multiply_2"},
+    {test_matrix_multiply_MtN, "test_matrix_multiply_MtN"},
     {test_matrix_vector_multiply_identity, "test_matrix_vector_multiply_identity"},
     {test_matrix_vector_multiply, "test_matrix_vector_multiply"},
     {test_matrix_vector_multiply_Mtv, "test_matrix_vector_multiply_Mtv"},
@@ -514,7 +530,7 @@ void run_tests(struct test tests[], int n_tests) {
     int n_pass_tests = 0; int n_fail_tests = 0;
     for(int i = 0; i < n_tests; i++) {
         test_success = (tests[i].test_f)();
-        n_pass_tests += test_success; n_pass_tests += 1 - test_success;
+        n_pass_tests += test_success; n_fail_tests += 1 - test_success;
         _display_result(test_success, tests[i].name);
         all_success = all_success && test_success;
     }

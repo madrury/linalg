@@ -176,6 +176,27 @@ struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
     return Mprod;
 }
 
+/* Compute the matrix product transpose(M) * N.
+
+   This method is more efficient than an expicit transpose of the matrix M,
+   which would necessitate a copy of all data in M.  The order of the loops,
+   k-i-j, is chosen to optimize memory access patterns.  The innter two
+   loops index contiguous memory in the factor matricies.
+*/
+struct matrix* matrix_multiply_MtN(struct matrix* Mleft, struct matrix* Mright) {
+    assert(Mleft->n_row == Mright->n_row);
+    struct matrix* Mprod = matrix_zeros(Mleft->n_row, Mright->n_col);
+    for(int k = 0; k < Mleft->n_col; k++) {
+        for(int i = 0; i < Mprod->n_row; i++) {
+            for(int j = 0; j < Mprod->n_col; j++) {
+                MATRIX_IDX_INTO(Mprod, i, j) +=
+                    MATRIX_IDX_INTO(Mleft, k, i) * MATRIX_IDX_INTO(Mright, k, j);
+            }
+        }
+    }
+    return Mprod;
+}
+
 /* Compute the product of an aligned matrix vector pair. */
 struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
     assert(M->n_col == v->length);
