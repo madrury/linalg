@@ -6,6 +6,7 @@
 #include "vector.h"
 #include "matrix.h"
 #include "linsolve.h"
+#include "rand.h"
 
 
 /* Unit tests for vector module. */
@@ -167,13 +168,14 @@ bool test_matrix_identity() {
 bool test_matrix_transpose() {
     double D[] = {1.0, 2.0, 3.0,
                   4.0, 5.0, 6.0,
-                  7.0, 8.0, 9.0};
-    struct matrix* M = matrix_from_array(D, 3, 3);
+                  7.0, 8.0, 9.0,
+                  1.0, 2.0, 3.0};
+    struct matrix* M = matrix_from_array(D, 4, 3);
     struct matrix* Mt = matrix_transpose(M);
-    double T[] = {1.0, 4.0, 7.0,
-                  2.0, 5.0, 8.0,
-                  3.0, 6.0, 9.0};
-    struct matrix* res = matrix_from_array(T, 3, 3);
+    double T[] = {1.0, 4.0, 7.0, 1.0,
+                  2.0, 5.0, 8.0, 2.0,
+                  3.0, 6.0, 9.0, 3.0};
+    struct matrix* res = matrix_from_array(T, 3, 4);
     bool test = matrix_equal(Mt, res, .01);
     matrix_free(M); matrix_free(Mt); matrix_free(res);
     return test;
@@ -395,8 +397,21 @@ bool test_qr_decomp_non_square() {
     return qtest && rtest;
 }
 
+bool test_qr_decomp_random() {
+    struct matrix* M = matrix_random_uniform(10000, 100, 0, 1);
+    struct matrix* I = matrix_identity(100);
+    struct qr_decomp* qr = matrix_qr_decomposition(M);
+    struct matrix* recovered_M = matrix_multiply(qr->q, qr->r);
+    struct matrix* qt = matrix_transpose(qr->q);
+    struct matrix* qt_q = matrix_multiply(qt, qr->q);
+    bool test = matrix_equal(M, recovered_M, .01) && matrix_equal(qt_q, I, .01);
+    matrix_free(M); matrix_free(I); matrix_free(recovered_M);
+    matrix_free(qt); matrix_free(qt_q); qr_decomp_free(qr);
+    return test;
+}
 
-#define N_MATRIX_TESTS 18
+
+#define N_MATRIX_TESTS 19
 
 struct test matrix_tests[] = {
     {test_matrix_zeros, "test_matrix_zeros"},
@@ -416,7 +431,8 @@ struct test matrix_tests[] = {
     {test_qr_decomp_orthogonal, "test_qr_decomp_orthogonal"},
     {test_qr_decomp, "test_qr_decomp"},
     {test_qr_decomp_2, "test_qr_decomp_2"},
-    {test_qr_decomp_non_square, "test_qr_decomp_non_square"}
+    {test_qr_decomp_non_square, "test_qr_decomp_non_square"},
+    {test_qr_decomp_random, "test_qr_decomp_random"},
 };
 
 
@@ -481,24 +497,28 @@ void _display_result(bool test_success, char* test_name) {
     }
 }
 
-void _display_final_result(all_success) {
+void _display_final_result(bool all_success, int n_pass_tests, int n_fail_tests) {
     printf("\n");
     if(all_success) {
-        printf("All tests pass.\n");
+        printf("All tests pass (%d passed, %d failed).\n", 
+               n_pass_tests, n_fail_tests);
     } else {
-        printf("Test failure.\n");
+        printf("Test failure (%d passed, %d failed).\n",
+               n_pass_tests, n_fail_tests);
     }
 }
 
 void run_tests(struct test tests[], int n_tests) {
     bool test_success;
     bool all_success = true;
+    int n_pass_tests = 0; int n_fail_tests = 0;
     for(int i = 0; i < n_tests; i++) {
         test_success = (tests[i].test_f)();
+        n_pass_tests += test_success; n_pass_tests += 1 - test_success;
         _display_result(test_success, tests[i].name);
         all_success = all_success && test_success;
     }
-    _display_final_result(all_success);
+    _display_final_result(all_success, n_pass_tests, n_fail_tests);
 }
 
 void run_all() {

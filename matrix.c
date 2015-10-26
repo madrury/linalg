@@ -120,8 +120,10 @@ struct matrix* matrix_identity(int size) {
 
 struct matrix* matrix_transpose(struct matrix* M) {
     struct matrix* Mt = matrix_new(M->n_col, M->n_row);
-    for(int i = 0; i < M->n_row * M->n_col; i++) {
-         DATA(Mt)[i] = DATA(M)[MATRIX_IDX(M, MATRIX_COL(Mt, i), MATRIX_ROW(Mt, i))];
+    for(int i = 0; i < M->n_row; i++) {
+        for(int j = 0; j < M->n_col; j++) {
+            MATRIX_IDX_INTO(Mt, j, i) = MATRIX_IDX_INTO(M, i, j);
+        }
     }
     return Mt;
 }
