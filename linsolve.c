@@ -1,6 +1,7 @@
 #include <assert.h>
 #include "vector.h"
 #include "matrix.h"
+#include "linsolve.h"
 
 /* Solve a general linear equation Mx = v using the QR decomposition of M.
 

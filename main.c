@@ -10,7 +10,7 @@ void time_matrix_multiply() {
     struct matrix* P;
     struct matrix* M = matrix_random_uniform(1000, 1000, 0, 1);
     struct matrix* N = matrix_random_uniform(1000, 1000, 0, 1);
-    for(cachent cache = 0; cache < 1000; cache += 50) {
+    for(int cache = 0; cache < 1000; cache += 50) {
         clock_t start = clock(), diff;
         if(cache > 0) {
             P = matrix_multiply_cache(M, N, cache); 
@@ -21,7 +21,7 @@ void time_matrix_multiply() {
 
         int msec = diff * 1000 / CLOCKS_PER_SEC;
         printf("With cache size %d took %d seconds and %d milliseconds.\n",
-               i, msec / 1000, msec % 1000
+               cache, msec / 1000, msec % 1000
         );
     }
     matrix_free(M); matrix_free(N); matrix_free(P);
