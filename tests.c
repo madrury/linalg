@@ -493,13 +493,24 @@ bool test_solve_qr_general() {
     return test;
 }
 
+bool test_solve_qr_random() {
+    struct matrix* M = matrix_random_uniform(100, 100, 0, 1);
+    struct vector* v = vector_random_uniform(100, 0, 1);
+    struct vector* y = matrix_vector_multiply(M, v);
+    struct vector* s = linsolve_qr(M, y);
+    bool test = vector_equal(v, s, .01);
+    vector_free_many(3, v, y, s); matrix_free(M);
+    return test;
+}
 
-#define N_LINSOLVE_TESTS 3
+
+#define N_LINSOLVE_TESTS 4
 
 struct test linsolve_tests[] = {
     {test_solve_qr_identity, "test_solve_qr_identity"},
     {test_solve_qr_upper_triangular, "test_solve_qr_upper_triangular"},
     {test_solve_qr_general, "test_solve_qr_general"},
+    {test_solve_qr_random, "test_solve_qr_random"},
 };
 
 // Testing setup.
