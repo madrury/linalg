@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <assert.h>
+#include <stdarg.h>
 #include "linalg_obj.h"
 #include "vector.h"
 #include "errors.h"
@@ -78,6 +79,16 @@ void vector_free(struct vector* v) {
         } else {
             raise_non_zero_reference_free_error();
         }
+    }
+}
+
+void vector_free_many(int n_to_free, ...) {
+    struct vector* v;
+    va_list argp;
+    va_start(argp, n_to_free);
+    for(int i = 0; i < n_to_free; i++) {
+        v = va_arg(argp, struct vector*);
+        vector_free(v);
     }
 }
 

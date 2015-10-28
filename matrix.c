@@ -4,6 +4,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <assert.h>
+#include <stdarg.h>
 #include "matrix.h"
 #include "vector.h"
 #include "errors.h"
@@ -54,6 +55,16 @@ void matrix_free(struct matrix* M) {
         } else {
             raise_non_zero_reference_free_error();
         }
+    }
+}
+
+void matrix_free_many(int n_to_free, ...) {
+    struct matrix* v;
+    va_list argp;
+    va_start(argp, n_to_free);
+    for(int i = 0; i < n_to_free; i++) {
+        v = va_arg(argp, struct matrix*);
+        matrix_free(v);
     }
 }
 
