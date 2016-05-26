@@ -47,6 +47,7 @@ bool           matrix_equal(struct matrix* M1, struct matrix* M2, double tol);
 void           matrix_print(struct matrix*);
 
 
+/* Matrix decomposition: QR decomposition. */
 struct qr_decomp {
     struct matrix* q;
     struct matrix* r;

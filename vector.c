@@ -27,6 +27,12 @@ struct vector* vector_new(int length) {
     return new_vector;
 }
 
+/* Create a new vector which is a *view* into an already existing vector. 
+
+   The new and parent vectors share the same data, and modifying the data in
+   either will modify both vectors.  One the other hand, we do not have to copy
+   any data to create a view.
+*/
 struct vector* vector_new_view(struct linalg_obj* parent, double* view, int length) {
     assert(length >= 0);
     // TODO: Make this view check work.
