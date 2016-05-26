@@ -17,10 +17,18 @@
 struct vector* linsolve_qr(struct matrix* M, struct vector* v) {
     assert(M->n_row == v->length);
     struct qr_decomp* qr = matrix_qr_decomposition(M);
+    struct vector* solution = linsolve_from_qr(qr, v);
+    qr_decomp_free(qr);
+    return solution;
+}
+
+/* Solve from the qr decomposition itself.  Useful if multiple equations
+   with the same left hand side need to be solved.
+*/
+struct vector* linsolve_from_qr(struct qr_decomp* qr, struct vector* v) {
     struct vector* rhs = matrix_vector_multiply_Mtv(qr->q, v);
     struct vector* solution = solve_upper_triangular(qr->r, rhs);
     vector_free(rhs);
-    qr_decomp_free(qr);
     return solution;
 }
 
@@ -63,4 +71,3 @@ struct vector* solve_upper_triangular(struct matrix* R, struct vector* v) {
     }
     return solution;
 }
-
