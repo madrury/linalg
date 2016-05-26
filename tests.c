@@ -126,7 +126,6 @@ bool test_vector_normalize_into() {
 
 
 #define N_VECTOR_TESTS 10
-
 struct test vector_tests[] = {
     {test_vector_zeros, "test_vector_zeros"},
     {test_vector_view, "test_vector_view"},
@@ -426,7 +425,6 @@ bool test_qr_decomp_random() {
 
 
 #define N_MATRIX_TESTS 20
-
 struct test matrix_tests[] = {
     {test_matrix_zeros, "test_matrix_zeros"},
     {test_matrix_identity, "test_matrix_identity"},
@@ -505,7 +503,6 @@ bool test_solve_qr_random() {
 
 
 #define N_LINSOLVE_TESTS 4
-
 struct test linsolve_tests[] = {
     {test_solve_qr_identity, "test_solve_qr_identity"},
     {test_solve_qr_upper_triangular, "test_solve_qr_upper_triangular"},
@@ -513,8 +510,10 @@ struct test linsolve_tests[] = {
     {test_solve_qr_random, "test_solve_qr_random"},
 };
 
-// Testing setup.
 
+/* Testing Setup. */
+// TODO: Make a header file, so these methods can be defined in a less awkward
+// order.
 void _display_result(bool test_success, char* test_name) {
     if(test_success) {
         printf("*");

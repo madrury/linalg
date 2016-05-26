@@ -26,7 +26,7 @@ struct vector* linsolve_qr(struct matrix* M, struct vector* v) {
 
 /* Solve a linear equation Rx = v, where R is an upper triangular matrix.
 
-   This type of equation is easy to solve by basck substitution.  We work *up*
+   This type of equation is easy to solve by back substitution.  We work *up*
    the rows of R solving for the components of x backwards.  For example, the
    final row in R gives the equation
 
@@ -47,12 +47,16 @@ struct vector* solve_upper_triangular(struct matrix* R, struct vector* v) {
     // TODO: Check upper triangular.
     int n_eq = v->length;
     struct vector* solution = vector_new(n_eq);
+    /* back_substitute:
+       Tracks the part of the current equation (row) that reduces to a constant
+       after substituting in the values for the already solved for varaiables.
+    */
     float back_substitute;
 
     for(int i = n_eq - 1; i >= 0; i--) {
         back_substitute = 0;
         for(int j = i+1; j <= n_eq - 1; j++) {
-                back_substitute += VECTOR_IDX_INTO(solution, j) * MATRIX_IDX_INTO(R, i, j);
+            back_substitute += VECTOR_IDX_INTO(solution, j) * MATRIX_IDX_INTO(R, i, j);
         }
         VECTOR_IDX_INTO(solution, i) =
             (VECTOR_IDX_INTO(v, i) - back_substitute) / MATRIX_IDX_INTO(R, i, i);

@@ -5,7 +5,7 @@
 #include "matrix.h"
 #include "rand.h"
 
-
+/*
 void time_matrix_multiply() {
     struct matrix* P;
     struct matrix* M = matrix_random_uniform(1000, 1000, 0, 1);
@@ -26,6 +26,7 @@ void time_matrix_multiply() {
     }
     matrix_free(M); matrix_free(N); matrix_free(P);
 }
+*/
 
 void time_qr_decomp() {
     clock_t start = clock(), diff;
