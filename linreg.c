@@ -20,7 +20,7 @@ void linreg_free(struct linreg* lr) {
 }
 
 struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
-    // TODO: Check dimensionality.
+    assert(X->n_row == y->length);
     struct linreg* lr = linreg_new();
     lr->n = X->n_row;
     lr->p = X->n_col;
@@ -52,7 +52,8 @@ struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
 }
 
 struct vector* linreg_predict(struct linreg* lr, struct matrix* X) {
-    // TODO: Check dimensionality.
+    assert(lr->n == X->n_row);
+    assert(lr->p == X->n_col);
     struct vector* preds = matrix_vector_multiply(X, lr->beta);
     return preds;
 }

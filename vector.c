@@ -61,7 +61,7 @@ struct vector* vector_new_view(struct linalg_obj* parent, double* view, int leng
 }
 
 struct vector* vector_from_array(double* data, int length) {
-    assert(length != 0);
+    assert(length > 0);
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
         VECTOR_IDX_INTO(v, i) = data[i];
@@ -101,6 +101,7 @@ void vector_free_many(int n_to_free, ...) {
 
 /* Construct a vector of a given length filled with zeros. */
 struct vector* vector_zeros(int length) {
+    assert(length > 0);
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
         VECTOR_IDX_INTO(v, i) = 0;
@@ -128,7 +129,7 @@ struct vector* vector_linspace(int length, double min, double max) {
 */
 struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx) {
     assert(begin_idx <= end_idx);
-    // TODO: Make sure the slice does not exceed the bounds of the parent vector.
+    assert(end_idx <= v->length - 1);
     int new_vector_length = end_idx - begin_idx;
     double* begin_ptr = DATA(v) + begin_idx;
     struct vector* w = vector_new_view((struct linalg_obj*) v, begin_ptr, new_vector_length);
