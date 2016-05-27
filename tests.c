@@ -6,6 +6,7 @@
 #include "vector.h"
 #include "matrix.h"
 #include "linsolve.h"
+#include "linreg.h"
 #include "rand.h"
 
 
@@ -480,6 +481,7 @@ struct test matrix_tests[] = {
 };
 
 
+
 /* Unit tests for the linsolve module */
 
 bool test_solve_qr_identity() {
@@ -542,6 +544,29 @@ struct test linsolve_tests[] = {
 };
 
 
+/* Unit tests for linear regression module. */
+
+bool test_linreg_simple() {
+    double D[] = {1.0, 0.0,
+                  1.0, 1.0,
+                  1.0, 2.0};
+    struct matrix* X = matrix_from_array(D, 3, 2);
+    double B[] = {1.0, 1.0};
+    struct vector* true_beta = vector_from_array(B, 2);
+    struct vector* y = matrix_vector_multiply(X, true_beta);
+    struct linreg* lr = fit_linreg(X, y);
+    bool test = vector_equal(true_beta, lr->beta, 0.1);
+
+    vector_free_many(2, true_beta, y); matrix_free(X);
+    return test;
+}
+
+#define N_LINREG_TESTS 1
+struct test linreg_tests[] = {
+    {test_linreg_simple, "test_linreg_simple"},
+};
+
+
 /* Testing Setup. */
 // TODO: Make a header file, so these methods can be defined in a less awkward
 // order.
@@ -581,4 +606,5 @@ void run_all() {
     run_tests(vector_tests, N_VECTOR_TESTS);
     run_tests(matrix_tests, N_MATRIX_TESTS);
     run_tests(linsolve_tests, N_LINSOLVE_TESTS);
+    run_tests(linreg_tests, N_LINREG_TESTS);
 }
