@@ -10,7 +10,9 @@
 #include "rand.h"
 
 
-/* Unit tests for vector module. */
+/**********************************
+ * Unit tests for vector module. 
+ **********************************/
 
 bool test_vector_zeros() {
     struct vector* zeros = vector_zeros(5);
@@ -141,7 +143,9 @@ struct test vector_tests[] = {
 };
 
 
-/* Unit tests for matrix module. */
+/**********************************
+ * Unit tests for matrix module. 
+ **********************************/
 
 bool test_matrix_zeros() {
     struct matrix* M = matrix_zeros(3, 3);
@@ -481,8 +485,9 @@ struct test matrix_tests[] = {
 };
 
 
-
-/* Unit tests for the linsolve module */
+/**********************************
+ * Unit tests for linsolve module. 
+ **********************************/
 
 bool test_solve_qr_identity() {
     struct matrix* I = matrix_identity(3);
@@ -544,7 +549,9 @@ struct test linsolve_tests[] = {
 };
 
 
-/* Unit tests for linear regression module. */
+/*******************************************
+ * Unit tests for linear regression module. 
+ *******************************************/
 
 bool test_linreg_simple() {
     double D[] = {1.0, 0.0,
@@ -561,13 +568,39 @@ bool test_linreg_simple() {
     return test;
 }
 
-#define N_LINREG_TESTS 1
+bool test_linreg_multivar() {
+    double D[] = {1.0, 1.0, 1.0,
+                  1.0, 0.0, 2.0,
+                  1.0, 1.0, 3.0,
+                  1.0, 0.0, 4.0};
+    struct matrix* X = matrix_from_array(D, 4, 3);
+    double B[] = {1.0, -1.0, 1.0};
+    struct vector* true_beta = vector_from_array(B, 3);
+    struct vector* y = matrix_vector_multiply(X, true_beta);
+    struct linreg* lr = fit_linreg(X, y);
+    bool test = vector_equal(true_beta, lr->beta, 0.1);
+
+    vector_free_many(2, true_beta, y); matrix_free(X);
+    return test;
+}
+
+#define N_LINREG_TESTS 2
 struct test linreg_tests[] = {
     {test_linreg_simple, "test_linreg_simple"},
+    {test_linreg_multivar, "test_linreg_multivar"},
 };
 
 
-/* Testing Setup. */
+
+/* Testing Setup.
+
+   Tests are represented as a {function_pointer, function_name_string} struct.
+   Each function_pointer is a test function that returns a boolean, indicating
+   a pass or fail.
+
+   The functions below iterate over an array of such test objects and reports
+   the results of calling each test.
+*/
 // TODO: Make a header file, so these methods can be defined in a less awkward
 // order.
 void _display_result(bool test_success, char* test_name) {
