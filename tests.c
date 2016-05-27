@@ -598,7 +598,7 @@ bool test_linreg_simple() {
     double B[] = {1.0, 1.0};
     struct vector* true_beta = vector_from_array(B, 2);
     struct vector* y = matrix_vector_multiply(X, true_beta);
-    struct linreg* lr = fit_linreg(X, y);
+    struct linreg* lr = linreg_fit(X, y);
     bool test = vector_equal(true_beta, lr->beta, 0.1);
 
     vector_free_many(2, true_beta, y); matrix_free(X);
@@ -614,7 +614,7 @@ bool test_linreg_multivar() {
     double B[] = {1.0, -1.0, 1.0};
     struct vector* true_beta = vector_from_array(B, 3);
     struct vector* y = matrix_vector_multiply(X, true_beta);
-    struct linreg* lr = fit_linreg(X, y);
+    struct linreg* lr = linreg_fit(X, y);
     bool test = vector_equal(true_beta, lr->beta, 0.1);
 
     vector_free_many(2, true_beta, y); matrix_free(X);

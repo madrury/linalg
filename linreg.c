@@ -8,14 +8,14 @@
 #include "linsolve.h"
 #include "linreg.h"
 
-struct linreg* new_linreg(void) {
+struct linreg* linreg_new(void) {
     struct linreg* lr = malloc(sizeof(struct linreg));
     return lr;
 }
 
-struct linreg* fit_linreg(struct matrix* X, struct vector* y) {
+struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
     // TODO: Check dimensionality.
-    struct linreg* lr = new_linreg();
+    struct linreg* lr = linreg_new();
     lr->n = X->n_row;
     lr->p = X->n_col;
 
@@ -27,7 +27,7 @@ struct linreg* fit_linreg(struct matrix* X, struct vector* y) {
     lr->beta = beta;
 
     // Calculate the residual standard deviation.
-    struct vector* y_hat = predict_linreg(lr, X);
+    struct vector* y_hat = linreg_predict(lr, X);
     double sigma_resid_sq = 0; double resid = 0;
     for(int i = 0; i < y->length; i++) {
         resid = VECTOR_IDX_INTO(y, i) - VECTOR_IDX_INTO(y_hat, i);
@@ -45,7 +45,7 @@ struct linreg* fit_linreg(struct matrix* X, struct vector* y) {
     return lr;
 }
 
-struct vector* predict_linreg(struct linreg* lr, struct matrix* X) {
+struct vector* linreg_predict(struct linreg* lr, struct matrix* X) {
     // TODO: Check dimensionality.
     struct vector* preds = matrix_vector_multiply(X, lr->beta);
     return preds;

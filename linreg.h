@@ -9,7 +9,7 @@ struct linreg {
     double sigma_resid;
 };
 
-struct linreg* new_linreg(void);
+struct linreg* linreg_new(void);
 
-struct linreg* fit_linreg(struct matrix* X, struct vector* y);
-struct vector* predict_linreg(struct linreg* lnreg, struct matrix* X);
+struct linreg* linreg_fit(struct matrix* X, struct vector* y);
+struct vector* linreg_predict(struct linreg* lnreg, struct matrix* X);
