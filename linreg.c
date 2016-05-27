@@ -8,6 +8,14 @@
 #include "linsolve.h"
 #include "linreg.h"
 
+/* Linear Regression.
+
+  Fit and score a linear regression to a design matrix X and a response vector y.
+  The regression is fit by solving the following linear equation for b:
+
+      Xt * X b = Xt y
+*/
+
 struct linreg* linreg_new(void) {
     struct linreg* lr = malloc(sizeof(struct linreg));
     return lr;
@@ -25,7 +33,7 @@ struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
     lr->n = X->n_row;
     lr->p = X->n_col;
 
-    // Solve the linear equation Xt * X = Xt y for the linear regression coefficients.
+    // Solve linear equation for the regression coefficients.
     struct vector* Xty = matrix_vector_multiply_Mtv(X, y);
     struct matrix* XtX = matrix_multiply_MtN(X, X);
     struct qr_decomp* qr = matrix_qr_decomposition(XtX);

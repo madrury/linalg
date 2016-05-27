@@ -9,7 +9,7 @@
 
      QRx = v => Rx = transpose(Q)v
 
-   The matrix product transpose(Q)v is easy to compute, so the docomposition
+   The matrix product transpose(Q)v is easy to compute, so the decomposition
    reduces the problem to solving a linear equation Rx = y for an upper
    triangular matrix R.
   
