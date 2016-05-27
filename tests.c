@@ -601,7 +601,7 @@ bool test_linreg_simple() {
     struct linreg* lr = linreg_fit(X, y);
     bool test = vector_equal(true_beta, lr->beta, 0.1);
 
-    vector_free_many(2, true_beta, y); matrix_free(X);
+    vector_free_many(2, true_beta, y); matrix_free(X); linreg_free(lr);
     return test;
 }
 
@@ -617,7 +617,7 @@ bool test_linreg_multivar() {
     struct linreg* lr = linreg_fit(X, y);
     bool test = vector_equal(true_beta, lr->beta, 0.1);
 
-    vector_free_many(2, true_beta, y); matrix_free(X);
+    vector_free_many(2, true_beta, y); matrix_free(X); linreg_free(lr);
     return test;
 }
 

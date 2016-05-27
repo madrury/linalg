@@ -13,6 +13,12 @@ struct linreg* linreg_new(void) {
     return lr;
 }
 
+void linreg_free(struct linreg* lr) {
+    vector_free(lr->beta);
+    vector_free(lr->y_hat);
+    free(lr);
+}
+
 struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
     // TODO: Check dimensionality.
     struct linreg* lr = linreg_new();
