@@ -227,7 +227,7 @@ struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
 */
 struct matrix* matrix_multiply_MtN(struct matrix* Mleft, struct matrix* Mright) {
     assert(Mleft->n_row == Mright->n_row);
-    struct matrix* Mprod = matrix_zeros(Mleft->n_row, Mright->n_col);
+    struct matrix* Mprod = matrix_zeros(Mleft->n_col, Mright->n_col);
     for(int k = 0; k < Mleft->n_col; k++) {
         for(int i = 0; i < Mprod->n_row; i++) {
             for(int j = 0; j < Mprod->n_col; j++) {
@@ -242,7 +242,7 @@ struct matrix* matrix_multiply_MtN(struct matrix* Mleft, struct matrix* Mright) 
 /* Compute the product of an aligned matrix vector pair. */
 struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
     assert(M->n_col == v->length);
-    struct vector* w = vector_new(v->length);
+    struct vector* w = vector_new(M->n_row);
     double sum;
     for(int i = 0; i < M->n_row; i++) {
         sum = 0;
@@ -263,7 +263,7 @@ struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v) {
 */
 struct vector* matrix_vector_multiply_Mtv(struct matrix* M, struct vector* v) {
     assert(M->n_row == v->length);
-    struct vector* w = vector_zeros(v->length);
+    struct vector* w = vector_zeros(M->n_col);
     for(int j = 0; j < M->n_row; j++) {
         for(int i = 0; i < M->n_col; i++) {
             VECTOR_IDX_INTO(w, i) += MATRIX_IDX_INTO(M, j, i) * VECTOR_IDX_INTO(v, j);
