@@ -212,6 +212,41 @@ bool test_matrix_multiply() {
     return test;
 }
 
+bool test_matrix_multiply_nonsquare() {
+    double D[] = {1.0, 1.0,
+                  0.0, 1.0,
+                  0.0, 0.0};
+    struct matrix* Mleft = matrix_from_array(D, 3, 2);
+    double E[] = {1.0, 1.0, 1.0,
+                  0.0, 1.0, 1.0};
+    struct matrix* Mright = matrix_from_array(E, 2, 3);
+    struct matrix* Mprod = matrix_multiply(Mleft, Mright);
+    double R[] = {1.0, 2.0, 2.0,
+                  0.0, 1.0, 1.0,
+                  0.0, 0.0, 0.0};
+    struct matrix* res = matrix_from_array(R, 3, 3);
+    bool test = matrix_equal(Mprod, res, .01);
+    matrix_free_many(4, Mleft, Mright, Mprod, res);
+    return test;
+}
+
+bool test_matrix_multiply_nonsquare2() {
+    double D[] = {1.0, 1.0, 1.0,
+                  0.0, 1.0, 1.0};
+    struct matrix* Mleft = matrix_from_array(D, 2, 3);
+    double E[] = {1.0, 1.0,
+                  0.0, 1.0,
+                  0.0, 0.0};
+    struct matrix* Mright = matrix_from_array(E, 3, 2);
+    struct matrix* Mprod = matrix_multiply(Mleft, Mright);
+    double R[] = {1.0, 2.0,
+                  0.0, 1.0};
+    struct matrix* res = matrix_from_array(R, 2, 2);
+    bool test = matrix_equal(Mprod, res, .01);
+    matrix_free_many(4, Mleft, Mright, Mprod, res);
+    return test;
+}
+
 bool test_matrix_multiply_MtN() {
     double D[] = {1.0, 1.0, 0.0,
                   0.0, 1.0, 0.0,
@@ -458,13 +493,15 @@ bool test_qr_decomp_random() {
 }
 
 
-#define N_MATRIX_TESTS 22
+#define N_MATRIX_TESTS 24
 struct test matrix_tests[] = {
     {test_matrix_zeros, "test_matrix_zeros"},
     {test_matrix_identity, "test_matrix_identity"},
     {test_matrix_transpose, "test_matrix_transpose"},
     {test_matrix_multiply_identity, "test_matrix_multiply_identity"},
     {test_matrix_multiply, "test_matrix_multiply"},
+    {test_matrix_multiply_nonsquare, "test_matrix_multiply_nonsquare"},
+    {test_matrix_multiply_nonsquare2, "test_matrix_multiply_nonsquare2"},
     {test_matrix_multiply_MtN, "test_matrix_multiply_MtN"},
     {test_matrix_multiply_MtN_nonsquare, "test_matrix_multiply_MtN_nonsquare"},
     {test_matrix_vector_multiply_identity, "test_matrix_vector_multiply_identity"},
