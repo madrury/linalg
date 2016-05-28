@@ -78,7 +78,7 @@ void matrix_free_many(int n_to_free, ...) {
    data, a column is not, so there is no column_view method.
 */
 struct vector* matrix_row_view(struct matrix* M, int row) {
-    assert(0 <= row <= M->n_row - 1);
+    assert(0 <= row && row <= M->n_row - 1);
     double* row_p = DATA(M) + (row * M->n_col);
     struct vector* r = vector_new_view((struct linalg_obj*) M, row_p, M->n_col);
     return r;
@@ -86,7 +86,7 @@ struct vector* matrix_row_view(struct matrix* M, int row) {
 
 /* Create a new vector which contains a copy of a row of a matrix. */
 struct vector* matrix_row_copy(struct matrix* M, int row) {
-    assert(0 <= row <= M->n_row - 1);
+    assert(0 <= row && row <= M->n_row - 1);
     struct vector* r = vector_new(M->n_col);
     for(int i = 0; i < M->n_col; i++) {
         VECTOR_IDX_INTO(r, i) = MATRIX_IDX_INTO(M, row, i);
@@ -96,7 +96,7 @@ struct vector* matrix_row_copy(struct matrix* M, int row) {
 
 /* Create a new vector which contains a copy of a row of a matrix. */
 struct vector* matrix_column_copy(struct matrix* M, int col) {
-    assert(0 <= col <= M->n_col - 1);
+    assert(0 <= col && col <= M->n_col - 1);
     struct vector* c = vector_new(M->n_row);
     for(int i = 0; i < M->n_row; i++) {
         VECTOR_IDX_INTO(c, i) = MATRIX_IDX_INTO(M, i, col);
