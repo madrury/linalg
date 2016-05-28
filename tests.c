@@ -621,12 +621,24 @@ bool test_linreg_multivar() {
     return test;
 }
 
-#define N_LINREG_TESTS 2
+bool test_linreg_intercept_only() {
+    double D[] = {1.0, 1.0, 1.0, 1.0};
+    struct matrix* X = matrix_from_array(D, 4, 1);
+    double Y[] = {1.0, 1.0, 0.0, 0.0};
+    struct vector* y = vector_from_array(Y, 4);
+    struct linreg* lr = linreg_fit(X, y);
+    bool test = (fabs(0.5 - VECTOR_IDX_INTO(lr->beta, 0)) < .01);
+
+    vector_free(y); matrix_free(X); linreg_free(lr);
+    return test;
+}
+
+#define N_LINREG_TESTS 3
 struct test linreg_tests[] = {
     {test_linreg_simple, "test_linreg_simple"},
     {test_linreg_multivar, "test_linreg_multivar"},
+    {test_linreg_intercept_only, "test_linreg_intercept_only"},
 };
-
 
 
 /* Testing Setup.
