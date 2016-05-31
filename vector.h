@@ -21,6 +21,7 @@ void           vector_free(struct vector*);
 void           vector_free_many(int n_to_free, ...);
 
 struct vector* vector_zeros(int length);
+struct vector* vector_constant(int length, double x);
 struct vector* vector_linspace(int length, double min, double max);
 struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx);
 struct vector* vector_copy(struct vector* v);

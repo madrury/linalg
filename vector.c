@@ -99,14 +99,20 @@ void vector_free_many(int n_to_free, ...) {
     }
 }
 
-/* Construct a vector of a given length filled with zeros. */
-struct vector* vector_zeros(int length) {
+/* Construct a vector of a given length filled with a given constant. */
+struct vector* vector_constant(int length, double x) {
     assert(length > 0);
     struct vector* v = vector_new(length);
     for(int i = 0; i < v->length; i++) {
-        VECTOR_IDX_INTO(v, i) = 0;
+        VECTOR_IDX_INTO(v, i) = x;
     }
     return v;
+}
+
+/* Construct a vector of a given length filled with zeros. */
+struct vector* vector_zeros(int length) {
+    assert(length > 0);
+    return vector_constant(length, 0);
 }
 
 /* Construct a vector of equally spaced points within the closed
