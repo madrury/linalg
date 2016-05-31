@@ -18,7 +18,7 @@ void init_random() {
 
 double _random_uniform(double low, double high) {
     assert(low < high);
-    return (low + high) * ((double) rand() / (double) RAND_MAX) - low;
+    return (high - low) * ((double) rand() / (double) RAND_MAX) - low;
 }
 
 struct vector* vector_random_uniform(int length, double low, double high) {
