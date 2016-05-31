@@ -599,7 +599,7 @@ bool test_linreg_simple() {
     struct vector* true_beta = vector_from_array(B, 2);
     struct vector* y = matrix_vector_multiply(X, true_beta);
     struct linreg* lr = linreg_fit(X, y);
-    bool test = vector_equal(true_beta, lr->beta, 0.1);
+    bool test = vector_equal(true_beta, lr->beta, 0.01);
 
     vector_free_many(2, true_beta, y); matrix_free(X); linreg_free(lr);
     return test;
@@ -615,7 +615,7 @@ bool test_linreg_multivar() {
     struct vector* true_beta = vector_from_array(B, 3);
     struct vector* y = matrix_vector_multiply(X, true_beta);
     struct linreg* lr = linreg_fit(X, y);
-    bool test = vector_equal(true_beta, lr->beta, 0.1);
+    bool test = vector_equal(true_beta, lr->beta, 0.01);
 
     vector_free_many(2, true_beta, y); matrix_free(X); linreg_free(lr);
     return test;
@@ -633,11 +633,38 @@ bool test_linreg_intercept_only() {
     return test;
 }
 
-#define N_LINREG_TESTS 3
+/* Fit a linear regression unsing a randomly generated design matrix to a
+   signal + noise response.
+*/
+bool test_linreg_random() {
+    // Construct a random design matrix.
+    struct matrix* X = matrix_random_uniform(100000, 10, 0, 1);
+    struct vector* intercept = vector_constant(100000, 1);
+    matrix_copy_vector_into_column(X, intercept, 0);
+
+    struct vector* true_beta = vector_random_uniform(10, -1, 1);
+
+    struct vector* y = matrix_vector_multiply(X, true_beta);
+    struct vector* noise = vector_random_gaussian(100000, 0, .1);
+    vector_add_into(y, noise);
+
+    struct linreg* lr = linreg_fit(X, y);
+    bool test = vector_equal(true_beta, lr->beta, 0.01);
+
+    vector_free_many(3, true_beta, intercept, noise);
+    matrix_free(X);
+    linreg_free(lr);
+    return test;
+}
+
+
+
+#define N_LINREG_TESTS 4
 struct test linreg_tests[] = {
     {test_linreg_simple, "test_linreg_simple"},
     {test_linreg_multivar, "test_linreg_multivar"},
     {test_linreg_intercept_only, "test_linreg_intercept_only"},
+    {test_linreg_random, "test_linreg_random"},
 };
 
 
