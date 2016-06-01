@@ -25,15 +25,20 @@ struct vector* vector_constant(int length, double x);
 struct vector* vector_linspace(int length, double min, double max);
 struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx);
 struct vector* vector_copy(struct vector* v);
+void           vector_copy_into(struct vector* reciever, struct vector* v);
+
 
 struct vector* vector_subtract(struct vector* v1, struct vector* v2);
-void           vector_subtract_into(struct vector* v1, struct vector* v2);
+void           vector_subtract_into(struct vector* reciever, 
+                                    struct vector* v1, struct vector* v2);
 struct vector* vector_add(struct vector* v1, struct vector* v2);
-void           vector_add_into(struct vector* v1, struct vector* v2);
+void           vector_add_into(struct vector* reciever,
+                               struct vector* v1, struct vector* v2);
 struct vector* vector_normalize(struct vector* v);
-void           vector_normalize_into(struct vector* v);
+void           vector_normalize_into(struct vector* reciever, struct vector* v);
 struct vector* vector_scalar_multiply(struct vector* v, double s);
-void           vector_scalar_multiply_into(struct vector* v, double s);
+void           vector_scalar_multiply_into(struct vector* reciever,
+                                           struct vector* v, double s);
 
 bool           vector_equal(struct vector* v1, struct vector* v2, double tol);
 

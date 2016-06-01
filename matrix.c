@@ -371,15 +371,17 @@ struct qr_decomp* matrix_qr_decomposition(struct matrix* M) {
             // vector, saving a malloc and free.
             current_unit_vector = matrix_column_copy(q, j);
             current_dot_product = vector_dot_product(current_unit_vector, current_column);
-            vector_scalar_multiply_into(current_unit_vector, current_dot_product);
-            vector_subtract_into(current_column, current_unit_vector);
+            vector_scalar_multiply_into(current_unit_vector, 
+                                        current_unit_vector, current_dot_product);
+            vector_subtract_into(current_column, 
+                                 current_column, current_unit_vector);
             vector_free(current_unit_vector);
             MATRIX_IDX_INTO(r, j, i) = current_dot_product;
         }
         norm = vector_norm(current_column);
         // TODO: Check for zero norm here, indicating the the matrix is not full rank.
         MATRIX_IDX_INTO(r, i, i) = norm;
-        vector_normalize_into(current_column);
+        vector_normalize_into(current_column, current_column);
         matrix_copy_vector_into_column(q, current_column, i);
         vector_free(current_column);
     }

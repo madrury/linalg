@@ -81,7 +81,7 @@ bool test_vector_add_into() {
     struct vector* v1 = vector_from_array(D1, 5);
     double D2[] = {0.0, 0.0, 1.0, 1.0, 1.0};
     struct vector* v2 = vector_from_array(D2, 5);
-    vector_add_into(v1, v2);
+    vector_add_into(v1, v1, v2);
     double D3[] = {1.0, 1.0, 2.0, 1.0, 1.0};
     struct vector* res = vector_from_array(D3, 5);
     bool test = vector_equal(v1, res, .01);
@@ -107,7 +107,7 @@ bool test_vector_subtract_into() {
     struct vector* v1 = vector_from_array(D1, 5);
     double D2[] = {0.0, 0.0, 1.0, 1.0, 1.0};
     struct vector* v2 = vector_from_array(D2, 5);
-    vector_subtract_into(v1, v2);
+    vector_subtract_into(v1, v1, v2);
     double D3[] = {1.0, 1.0, 0.0, -1.0, -1.0};
     struct vector* res = vector_from_array(D3, 5);
     bool test = vector_equal(v1, res, .01);
@@ -121,7 +121,7 @@ bool test_vector_normalize_into() {
     struct vector* v = vector_from_array(D, 5);
     double R[] = {1/sqrt(3), 1/sqrt(3), 1/sqrt(3), 0, 0};
     struct vector* res = vector_from_array(R, 5);
-    vector_normalize_into(v);
+    vector_normalize_into(v, v);
     bool test = vector_equal(v, res, .01);
     vector_free_many(2, v, res);
     return test;
@@ -646,7 +646,7 @@ bool test_linreg_random() {
 
     struct vector* y = matrix_vector_multiply(X, true_beta);
     struct vector* noise = vector_random_gaussian(100000, 0, .1);
-    vector_add_into(y, noise);
+    vector_add_into(y, y, noise);
 
     struct linreg* lr = linreg_fit(X, y);
     bool test = vector_equal(true_beta, lr->beta, 0.01);
