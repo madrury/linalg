@@ -25,7 +25,7 @@ struct vector* vector_constant(int length, double x);
 struct vector* vector_linspace(int length, double min, double max);
 struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx);
 struct vector* vector_copy(struct vector* v);
-struct vector* vector_copy_into(struct vector* reciever, struct vector* v);
+void           vector_copy_into(struct vector* reciever, struct vector* v);
 
 
 struct vector* vector_subtract(struct vector* v1, struct vector* v2);

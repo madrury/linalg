@@ -145,12 +145,16 @@ struct vector* vector_slice(struct vector* v, int begin_idx, int end_idx) {
 /* Copy all the data in a given vector into a new vector. */
 struct vector* vector_copy(struct vector* v) {
     struct vector* w = vector_new(v->length);
-    for(int i = 0; i < v->length; i++) {
-        VECTOR_IDX_INTO(w, i) = VECTOR_IDX_INTO(v, i);
-    }
+    vector_copy_into(w, v);
     return w;
 }
 
+void vector_copy_into(struct vector* reciever, struct vector* v) {
+    assert(v->length == reciever->length);
+    for(int i = 0; i < v->length; i++) {
+        VECTOR_IDX_INTO(reciever, i) = VECTOR_IDX_INTO(v, i);
+    }
+}
 
 /* Arithmatic methods.
     
