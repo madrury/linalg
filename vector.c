@@ -168,32 +168,28 @@ struct vector* vector_copy(struct vector* v) {
 struct vector* vector_subtract(struct vector* v1, struct vector* v2) {
     assert(vector_lengths_equal(v1, v2));
     struct vector* v = vector_new(v1->length);
-    for(int i = 0; i < v->length; i++) {
-        VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v1, i) - VECTOR_IDX_INTO(v2, i);
-    }
+    vector_subtract_into(v, v1, v2);
     return v;
 }
 
-void vector_subtract_into(struct vector* v1, struct vector* v2) {
+void vector_subtract_into(struct vector* reciever, struct vector* v1, struct vector* v2) {
     assert(vector_lengths_equal(v1, v2));
     for(int i = 0; i < v1->length; i++) {
-        VECTOR_IDX_INTO(v1, i) = VECTOR_IDX_INTO(v1, i) - VECTOR_IDX_INTO(v2, i);
+        VECTOR_IDX_INTO(reciever, i) = VECTOR_IDX_INTO(v1, i) - VECTOR_IDX_INTO(v2, i);
     }
 }
 
 struct vector* vector_add(struct vector* v1, struct vector* v2) {
     assert(vector_lengths_equal(v1, v2));
     struct vector* v = vector_new(v1->length);
-    for(int i = 0; i < v->length; i++) {
-        VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v1, i) + VECTOR_IDX_INTO(v2, i);
-    }
+    vector_add_into(v, v1, v2);
     return v;
 }
 
-void vector_add_into(struct vector* v1, struct vector* v2) {
+void vector_add_into(struct vector* reciever, struct vector* v1, struct vector* v2) {
     assert(vector_lengths_equal(v1, v2));
     for(int i = 0; i < v1->length; i++) {
-        VECTOR_IDX_INTO(v1, i) = VECTOR_IDX_INTO(v1, i) + VECTOR_IDX_INTO(v2, i);
+        VECTOR_IDX_INTO(reciever, i) = VECTOR_IDX_INTO(v1, i) + VECTOR_IDX_INTO(v2, i);
     }
 }
 
@@ -201,17 +197,15 @@ struct vector* vector_normalize(struct vector* v) {
     struct vector* vnorm = vector_new(v->length);
     double norm = vector_norm(v);
     assert(norm != 0);
-    for(int i = 0; i < v->length; i++) {
-        VECTOR_IDX_INTO(vnorm, i) = VECTOR_IDX_INTO(v, i) / norm;
-    }
+    vector_normalize_into(vnorm, v);
     return vnorm;
 }
 
-void vector_normalize_into(struct vector* v) {
+void vector_normalize_into(struct vector* reciever, struct vector* v) {
     double norm = vector_norm(v);
     assert(norm != 0);
     for(int i = 0; i < v->length; i++) {
-        VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v, i) / norm;
+        VECTOR_IDX_INTO(reciever, i) = VECTOR_IDX_INTO(v, i) / norm;
     }
 }
 
@@ -223,9 +217,9 @@ struct vector* vector_scalar_multiply(struct vector* v, double s) {
     return w;
 }
 
-void vector_scalar_multiply_into(struct vector* v, double s) {
+void vector_scalar_multiply_into(struct vector* reciever, struct vector* v, double s) {
     for(int i = 0; i < v->length; i++) {
-        VECTOR_IDX_INTO(v, i) = VECTOR_IDX_INTO(v, i) * s;
+        VECTOR_IDX_INTO(reciever, i) = VECTOR_IDX_INTO(v, i) * s;
     }
 }
 
