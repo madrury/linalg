@@ -107,7 +107,7 @@ struct vector* matrix_column_copy(struct matrix* M, int col) {
 /* Copy the diagonal of a matrix into a vector. */
 struct vector* matrix_diagonal(struct matrix* M) {
     // The minimum of the number of rows and columns.
-    int n = (M->n_row <= n->n_col) ? M->n_row : M->n_col;
+    int n = (M->n_row <= M->n_col) ? M->n_row : M->n_col;
     struct vector* diagonal = vector_zeros(n);
     for(int i = 0; i < n; i++) {
         VECTOR_IDX_INTO(diagonal, i) = MATRIX_IDX_INTO(M, i, i);
@@ -227,6 +227,19 @@ struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
         }
     }
     return Mprod;
+}
+
+void matrix_multiply_into(struct matrix* reciever,
+                                    struct matrix* Mleft, struct matrix* Mright) {
+    assert(Mleft->n_col == Mright->n_row);
+    for(int i = 0; i < Mleft->n_row; i++) {
+        for(int k = 0; k < Mleft->n_col; k++) {
+            for(int j = 0; j < Mright->n_col; j++) {
+                MATRIX_IDX_INTO(reciever, i, j) +=
+                    MATRIX_IDX_INTO(Mleft, i, k) * MATRIX_IDX_INTO(Mright, k, j);
+            }
+        }
+    }
 }
 
 /* Compute the matrix product transpose(M) * N.
