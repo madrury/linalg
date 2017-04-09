@@ -272,6 +272,7 @@ struct vector* matrix_vector_multiply_Mtv(struct matrix* M, struct vector* v) {
     return w;
 }
 
+/* Are two matricies equal to within a given tolerance? */
 bool matrix_equal(struct matrix* M1, struct matrix* M2, double tol) {
     if(M1->n_row != M2->n_row) {
         return false;
@@ -282,6 +283,20 @@ bool matrix_equal(struct matrix* M1, struct matrix* M2, double tol) {
     for(int i = 0; i < M1->n_row; i++) {
         for(int j = 0; j < M1->n_col; j++) {
             if(fabs(MATRIX_IDX_INTO(M1, i, j) - MATRIX_IDX_INTO(M2, i, j)) > tol) {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
+/* Is a matrix upper triangular to within a given tolerance? */
+bool matrix_is_upper_triangular(struct matrix* M, double tol) {
+    // For now, only treat square matricies. */
+    assert(M->n_row == M->n_col);
+    for (int i = 0; i < M->n_row; i++) {
+        for(int j = 0; j < i; j++) {
+            if(fabs(MATRIX_IDX_INTO(M, i, j)) > tol) {
                 return false;
             }
         }
