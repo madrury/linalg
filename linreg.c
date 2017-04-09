@@ -13,7 +13,7 @@
   Fit and score a linear regression to a design matrix X and a response vector y.
   The regression is fit by solving the following linear equation for b:
 
-      Xt * X b = Xt y
+      Xt X b = Xt y
 */
 
 struct linreg* linreg_new(void) {
@@ -27,6 +27,11 @@ void linreg_free(struct linreg* lr) {
     free(lr);
 }
 
+/* Solve a linear regression problem using the qr decomposition of the matrix X.
+
+  The idea here is that if X = QR, then the linear regression equations reduce
+  to R b = Q^t y.
+*/
 struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
     assert(X->n_row == y->length);
     struct linreg* lr = linreg_new();
@@ -34,11 +39,9 @@ struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
     lr->p = X->n_col;
 
     // Solve linear equation for the regression coefficients.
-    struct vector* Xty = matrix_vector_multiply_Mtv(X, y);
-    struct matrix* XtX = matrix_multiply_MtN(X, X);
-    struct qr_decomp* qr = matrix_qr_decomposition(XtX);
-    struct vector* beta = linsolve_from_qr(qr, Xty);
-    lr->beta = beta;
+    struct qr_decomp* qr = matrix_qr_decomposition(X);
+    struct vector* qtv = matrix_vector_multiply_Mtv(qr->q, y);
+    lr->beta = solve_upper_triangular(qr->r, qtv);
 
     // Calculate the residual standard deviation.
     struct vector* y_hat = linreg_predict(lr, X);
@@ -53,8 +56,7 @@ struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
     lr->sigma_resid = sigma_resid;
 
     qr_decomp_free(qr);
-    vector_free(Xty);
-    matrix_free(XtX);
+    vector_free(qtv);
 
     return lr;
 }
