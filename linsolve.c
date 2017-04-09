@@ -27,7 +27,7 @@ struct vector* linsolve_qr(struct matrix* M, struct vector* v) {
 */
 struct vector* linsolve_from_qr(struct qr_decomp* qr, struct vector* v) {
     struct vector* rhs = matrix_vector_multiply_Mtv(qr->q, v);
-    struct vector* solution = solve_upper_triangular(qr->r, rhs);
+    struct vector* solution = linsolve_upper_triangular(qr->r, rhs);
     vector_free(rhs);
     return solution;
 }
@@ -49,7 +49,7 @@ struct vector* linsolve_from_qr(struct qr_decomp* qr, struct vector* v) {
    then solving the resulting equation for x_{l-1}.  Continuing in this way
    solves the entire system.
 */ 
-struct vector* solve_upper_triangular(struct matrix* R, struct vector* v) {
+struct vector* linsolve_upper_triangular(struct matrix* R, struct vector* v) {
     assert(R->n_col == v->length);
     assert(R->n_row = R->n_col);
     // TODO: Check upper triangular.

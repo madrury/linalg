@@ -41,7 +41,7 @@ struct linreg* linreg_fit(struct matrix* X, struct vector* y) {
     // Solve linear equation for the regression coefficients.
     struct qr_decomp* qr = matrix_qr_decomposition(X);
     struct vector* qtv = matrix_vector_multiply_Mtv(qr->q, y);
-    lr->beta = solve_upper_triangular(qr->r, qtv);
+    lr->beta = linsolve_upper_triangular(qr->r, qtv);
 
     // Calculate the residual standard deviation.
     struct vector* y_hat = linreg_predict(lr, X);
