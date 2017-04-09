@@ -104,6 +104,17 @@ struct vector* matrix_column_copy(struct matrix* M, int col) {
     return c;
 }
 
+/* Copy the diagonal of a matrix into a vector. */
+struct vector* matrix_diagonal(struct matrix* M) {
+    // The minimum of the number of rows and columns.
+    int n = (M->n_row <= n->n_col) ? M->n_row : M->n_col;
+    struct vector* diagonal = vector_zeros(n);
+    for(int i = 0; i < n; i++) {
+        VECTOR_IDX_INTO(diagonal, i) = MATRIX_IDX_INTO(M, i, i);
+    }
+    return diagonal;
+}
+
 /* Copy the data in a vector into a row of a matrix.
 
    Note that this method modifies the matrix in place, it does not create a

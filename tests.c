@@ -357,6 +357,19 @@ bool test_matrix_column_copy() {
     return test;
 }
 
+bool test_matrix_diagonal() {
+    double D[] = {1.0, 2.0, 3.0,
+                  4.0, 5.0, 6.0,
+                  7.0, 8.0, 9.0};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct vector* d = matrix_diagonal(M);
+    double C[] = {1.0, 5.0, 9.0};
+    struct vector* res = vector_from_array(C, 3);
+    bool test = vector_equal(d, res, .01);
+    matrix_free(M); vector_free_many(2, res, d);
+    return test;
+}
+
 bool test_matrix_copy_vector_into_row() {
     struct matrix* M = matrix_zeros(3, 3);
     struct vector* v = vector_linspace(3, 0, 1);
@@ -509,7 +522,7 @@ bool test_qr_decomp_random() {
 }
 
 
-#define N_MATRIX_TESTS 26
+#define N_MATRIX_TESTS 27
 struct test matrix_tests[] = {
     {test_matrix_zeros, "test_matrix_zeros"},
     {test_matrix_identity, "test_matrix_identity"},
@@ -526,6 +539,7 @@ struct test matrix_tests[] = {
     {test_matrix_vector_multiply_Mtv, "test_matrix_vector_multiply_Mtv"},
     {test_matrix_row_copy, "test_matrix_row_copy"},
     {test_matrix_column_copy, "test_matrix_column_copy"},
+    {test_matrix_diagonal, "test_matrix_diagonal"},
     {test_matrix_copy_vector_into_row, "test_matrix_copy_vector_into_row"},
     {test_matrix_copy_vector_into_column, "test_matrix_copy_vector_into_column"},
     {test_matrix_is_upper_triangular, "test_matrix_is_upper_triangular"},

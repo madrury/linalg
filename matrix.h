@@ -29,6 +29,8 @@ struct vector* matrix_row_copy(struct matrix* M, int row);
 /* No column view, columns are not contiguous memory */
 struct vector* matrix_column_copy(struct matrix* M, int col);
 
+struct vector* matrix_diagonal(struct matrix* M);
+
 void           matrix_copy_vector_into_row(struct matrix* M, struct vector* v, int row);
 void           matrix_copy_vector_into_column(struct matrix* M, struct vector* v, int col);
 
