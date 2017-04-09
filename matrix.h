@@ -24,6 +24,8 @@ struct matrix* matrix_from_array(double* data, int n_row, int n_col);
 void           matrix_free(struct matrix* M);
 void           matrix_free_many(int n_to_free, ...);
 
+struct matrix* matrix_copy(struct matrix* M);
+
 struct vector* matrix_row_view(struct matrix* M, int row);
 struct vector* matrix_row_copy(struct matrix* M, int row);
 /* No column view, columns are not contiguous memory */

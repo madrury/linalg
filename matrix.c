@@ -68,6 +68,16 @@ void matrix_free_many(int n_to_free, ...) {
     }
 }
 
+struct matrix* matrix_copy(struct matrix* M) {
+    struct matrix* copy = matrix_new(M->n_row, M->n_col);
+    for(int i = 0; i < M->n_row; i++) {
+        for(int j = 0; j < M->n_col; j++) {
+            MATRIX_IDX_INTO(copy, i, j) = MATRIX_IDX_INTO(M, i, j);
+        }
+    }
+    return copy;
+}
+
 /* Create a new vector which is a *view* into a row of data in a matrix. 
 
    The new and parent objects share the same data, and modifying the data in
@@ -230,8 +240,15 @@ struct matrix* matrix_multiply(struct matrix* Mleft, struct matrix* Mright) {
 }
 
 void matrix_multiply_into(struct matrix* reciever,
-                                    struct matrix* Mleft, struct matrix* Mright) {
+                          struct matrix* Mleft, struct matrix* Mright) {
     assert(Mleft->n_col == Mright->n_row);
+    // Zero out the reciever matrix.
+    for(int i = 0; i < reciever->n_row; i++) {
+        for(int j = 0; j < reciever->n_col; j++) {
+            MATRIX_IDX_INTO(reciever, i, j) = 0;
+        }
+    }
+    // Now multiply.
     for(int i = 0; i < Mleft->n_row; i++) {
         for(int k = 0; k < Mleft->n_col; k++) {
             for(int j = 0; j < Mright->n_col; j++) {

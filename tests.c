@@ -6,6 +6,7 @@
 #include "vector.h"
 #include "matrix.h"
 #include "linsolve.h"
+#include "eigen.h"
 #include "linreg.h"
 #include "rand.h"
 
@@ -521,8 +522,46 @@ bool test_qr_decomp_random() {
     return test;
 }
 
+bool test_eigenvalues_diagonal() {
+    double D[] = {1.0, 2.0, 3.0,
+                  0.0, 0.5, 0.0,
+                  0.0, 0.0, 4.0};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct eigen* e = eigen_solve(M, 0.01, 10); 
+    double C[] = {1.0, 0.5, 4.0};
+    struct vector* res = vector_from_array(C, 3);
+    bool test = vector_equal(e->eigenvalues, res, 0.01);
+    matrix_free(M); vector_free(res); eigen_free(e);
+    return test;
+}
 
-#define N_MATRIX_TESTS 27
+bool test_eigenvalues_simple_2x2() {
+    double D[] = {2.0, 1.0,
+                  2.0, 3.0};
+    struct matrix* M = matrix_from_array(D, 2, 2);
+    struct eigen* e = eigen_solve(M, 0.01, 1); 
+    double C[] = {4.0, 1.0};
+    struct vector* res = vector_from_array(C, 2);
+    bool test = vector_equal(e->eigenvalues, res, 0.01);
+    matrix_free(M); vector_free(res); eigen_free(e);
+    return test;
+}
+
+bool test_eigenvalues_simple_3x3() {
+    double D[] = {-2.0, -4.0, 2.0,
+                  -2.0,  1.0, 2.0,
+                   4.0,  2.0, 5.0};
+    struct matrix* M = matrix_from_array(D, 3, 3);
+    struct eigen* e = eigen_solve(M, 0.01, 50); 
+    double C[] = {6.0, -5.0, 3};
+    struct vector* res = vector_from_array(C, 3);
+    bool test = vector_equal(e->eigenvalues, res, 0.01);
+    matrix_free(M); vector_free(res); eigen_free(e);
+    return test;
+}
+
+
+#define N_MATRIX_TESTS 30 
 struct test matrix_tests[] = {
     {test_matrix_zeros, "test_matrix_zeros"},
     {test_matrix_identity, "test_matrix_identity"},
@@ -534,6 +573,7 @@ struct test matrix_tests[] = {
     {test_matrix_multiply_MtN, "test_matrix_multiply_MtN"},
     {test_matrix_multiply_MtN_nonsquare, "test_matrix_multiply_MtN_nonsquare"},
     {test_matrix_vector_multiply_identity, "test_matrix_vector_multiply_identity"},
+    // 10
     {test_matrix_vector_multiply, "test_matrix_vector_multiply"},
     {test_matrix_vector_multiply_nonsquare, "test_matrix_vector_multiply_nonsquare"},
     {test_matrix_vector_multiply_Mtv, "test_matrix_vector_multiply_Mtv"},
@@ -544,6 +584,7 @@ struct test matrix_tests[] = {
     {test_matrix_copy_vector_into_column, "test_matrix_copy_vector_into_column"},
     {test_matrix_is_upper_triangular, "test_matrix_is_upper_triangular"},
     {test_matrix_is_not_upper_triangular, "test_matrix_is_not_upper_triangular"},
+    // 20
     {test_qr_decomp_identity, "test_qr_decomp_identity"},
     {test_qr_decomp_recover_matrix, "test_qr_decomp_recover_matrix"},
     {test_qr_decomp_orthogonal, "test_qr_decomp_orthogonal"},
@@ -551,6 +592,9 @@ struct test matrix_tests[] = {
     {test_qr_decomp_2, "test_qr_decomp_2"},
     {test_qr_decomp_non_square, "test_qr_decomp_non_square"},
     {test_qr_decomp_random, "test_qr_decomp_random"},
+    {test_eigenvalues_diagonal, "test_eigenvalues_diagonal"},
+    {test_eigenvalues_simple_2x2, "test_eigenvalues_simple_2x2"},
+    {test_eigenvalues_simple_3x3, "test_eigenvalues_simple_3x3"},
 };
 
 
