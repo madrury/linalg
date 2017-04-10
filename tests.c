@@ -561,14 +561,17 @@ bool test_eigenvalues_simple_3x3() {
 }
 
 bool test_eigenvectors_random() {
+    // M is a random symmetric matrix, it has all real eigenvalues with
+    // probability one.
     struct matrix* X = matrix_random_uniform(10, 10, -1, 1);
     struct matrix* M = matrix_multiply_MtN(X, X);
     struct eigen* e = eigen_solve(M, 0.000001, 250); 
 
-    // Test if the eigenvectors actually are eigenvectors.
+    // Test if the eigenvectors actually are eigenvectors by mutiplying M
+    // into the eigenvector matrix and testing if the ratios are all given
+    // by the assocaited eigenvalues.
     double eigenvalue, ratio;
     struct matrix* ME = matrix_multiply(M, e->eigenvectors);
-
     bool test;
     for(int i = 0; i < e->eigenvectors->n_col; i++) {
         eigenvalue = VECTOR_IDX_INTO(e->eigenvalues, i);

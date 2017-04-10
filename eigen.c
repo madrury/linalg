@@ -16,7 +16,11 @@ void eigen_free(struct eigen* e) {
     free(e); 
 }
 
-/* Solve for the eigendecomposition of a square matrix using the QR algorithm. */
+/* Compute the eigenvalues and eigenvectors of a matrix M.
+
+  The eigenvalues are computed using the QR algorithm, then the eigenvectors
+  are computed by inverse iteration.
+*/
 struct eigen* eigen_solve(struct matrix* M, double tol, int max_iter) {
     assert(M->n_row == M->n_col);
 
@@ -32,6 +36,23 @@ struct eigen* eigen_solve(struct matrix* M, double tol, int max_iter) {
     return e;
 }
 
+/* Compute the eigenvalues of a matrix using the QR algorithm.
+
+  This is a renormalized version of power iteration that converges to a full
+  set of eigenvalues.  Starting with the matrix M = M0, we iterate:
+
+    M0 = Q0 R0, M1 = R0 Q0;
+    M1 = Q1 R1, M2 = R1 Q1;
+    M2 = Q2 R2, M3 = R2 Q2;
+    ...
+
+  For a general matrix with a full set of eigenvalues, this sequence will
+  converge to an upper diagonal matrix:
+
+    Mi -> upper diagonal matrix
+
+  The diagonal entries of this matrix are the eigenvalues of M.
+*/
 struct vector* eigen_solve_eigenvalues(struct matrix* M,
                                        double tol,
                                        int max_iter) {
@@ -40,7 +61,7 @@ struct vector* eigen_solve_eigenvalues(struct matrix* M,
 
     struct matrix* X = matrix_copy(M);
     int i = 0;
-    // QR algorithm for eigenvalues.
+    // QR algorithm iterations.
     do {
         struct qr_decomp* qr = matrix_qr_decomposition(X);
         matrix_multiply_into(X, qr->r, qr->q);
@@ -51,6 +72,9 @@ struct vector* eigen_solve_eigenvalues(struct matrix* M,
     return matrix_diagonal(X);
 }
 
+/* Solve for the eigenvectors of a matrix M once the eigenvalues are known
+   using inverse iteration.
+*/
 struct matrix* eigen_solve_eigenvectors(struct matrix* M,
                                         struct vector* eigenvalues,
                                         double tol,
@@ -73,6 +97,24 @@ struct matrix* eigen_solve_eigenvectors(struct matrix* M,
     return eigenvectors;
 }
 
+/* Solve for the eigenvector associated with an eigenvalue using the inverse
+   iteration algorithm.
+
+  Given an approximate eigenvalue lambda, the inverse iteration algorithm
+  computes the matrix:
+
+    M' = M - lambda I
+
+  And then solves the following sequence of linear equations:
+
+    v0 = solve(M', random_vector), v0' = normalize(v0);
+    v1 = solve(M', v0'), v1' = normalize(v1);
+    v2 = solve(<', v1'), v2' = normalize(v2);
+    ...
+
+  This algorithm will converge to the eigenvector associated with the eigenvalue
+  closest to lambda.
+*/
 struct vector* eigen_backsolve(
                    struct matrix* M, double eigenvalue, double tol, int max_iter) {
 
