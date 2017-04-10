@@ -560,8 +560,36 @@ bool test_eigenvalues_simple_3x3() {
     return test;
 }
 
+bool test_eigenvectors_random() {
+    struct matrix* X = matrix_random_uniform(10, 10, -1, 1);
+    struct matrix* M = matrix_multiply_MtN(X, X);
+    struct eigen* e = eigen_solve(M, 0.000001, 250); 
 
-#define N_MATRIX_TESTS 30 
+    // Test if the eigenvectors actually are eigenvectors.
+    double eigenvalue, ratio;
+    struct matrix* ME = matrix_multiply(M, e->eigenvectors);
+
+    bool test;
+    for(int i = 0; i < e->eigenvectors->n_col; i++) {
+        eigenvalue = VECTOR_IDX_INTO(e->eigenvalues, i);
+        for(int j = 0; j < e->eigenvectors->n_row; j++) {
+            ratio = MATRIX_IDX_INTO(ME, j, i) / MATRIX_IDX_INTO(e->eigenvectors, j, i); 
+            if(fabs(ratio - eigenvalue) > 0.01) {
+                test = false;
+                goto cleanup;
+            }
+        }
+    }
+    test = true;
+    goto cleanup;
+
+cleanup:
+    matrix_free_many(3, X, M, ME); eigen_free(e);
+    return test;
+}
+
+
+#define N_MATRIX_TESTS 31
 struct test matrix_tests[] = {
     {test_matrix_zeros, "test_matrix_zeros"},
     {test_matrix_identity, "test_matrix_identity"},
@@ -595,6 +623,8 @@ struct test matrix_tests[] = {
     {test_eigenvalues_diagonal, "test_eigenvalues_diagonal"},
     {test_eigenvalues_simple_2x2, "test_eigenvalues_simple_2x2"},
     {test_eigenvalues_simple_3x3, "test_eigenvalues_simple_3x3"},
+    // 30
+    {test_eigenvectors_random, "test_eigenvectors_random"},
 };
 
 

@@ -80,7 +80,7 @@ struct vector* eigen_backsolve(
     struct vector* previous;
     // Preturb the eigenvalue a litle to prevent our right hand side matrix
     // from becoming singular.
-    double lambda = eigenvalue + ((double) rand() / (double) RAND_MAX) * 0.001; 
+    double lambda = eigenvalue + ((double) rand() / (double) RAND_MAX) * 0.000001; 
     
     struct matrix* M_minus_lambda_I = matrix_M_minus_lambda_I(M, lambda);
 
