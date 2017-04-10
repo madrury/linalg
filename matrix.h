@@ -48,6 +48,8 @@ struct matrix* matrix_multiply_MtN(struct matrix* Mleft, struct matrix* Mright);
 struct vector* matrix_vector_multiply(struct matrix* M, struct vector* v);
 struct vector* matrix_vector_multiply_Mtv(struct matrix* M, struct vector* v);
 
+struct matrix* matrix_M_minus_lambda_I(struct matrix* M, double lambda);
+
 bool           matrix_equal(struct matrix* M1, struct matrix* M2, double tol);
 bool           matrix_is_upper_triangular(struct matrix* M, double tol);
 

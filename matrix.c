@@ -313,6 +313,25 @@ struct vector* matrix_vector_multiply_Mtv(struct matrix* M, struct vector* v) {
     return w;
 }
 
+/* Compute the expression M - lambda I, where:
+
+  - M is a square matrix.
+  - lambda is a number (generally an eigenvalue).
+  - I is an identity matrix.
+
+This is useful when backsolving for an eigenvector with known eigenvalue.
+*/
+struct matrix* matrix_M_minus_lambda_I(struct matrix* M, double lambda) {
+    assert(M->n_row == M->n_col);
+    struct matrix* M_minus_lambda_I = matrix_copy(M);
+
+    for(int i = 0; i < M->n_row; i++) {
+        MATRIX_IDX_INTO(M_minus_lambda_I, i, i) -= lambda;
+    }
+
+    return M_minus_lambda_I;
+}
+
 /* Are two matricies equal to within a given tolerance? */
 bool matrix_equal(struct matrix* M1, struct matrix* M2, double tol) {
     if(M1->n_row != M2->n_row) {

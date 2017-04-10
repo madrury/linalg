@@ -527,7 +527,7 @@ bool test_eigenvalues_diagonal() {
                   0.0, 0.5, 0.0,
                   0.0, 0.0, 4.0};
     struct matrix* M = matrix_from_array(D, 3, 3);
-    struct eigen* e = eigen_solve(M, 0.01, 10); 
+    struct eigen* e = eigen_solve(M, 0.0001, 100); 
     double C[] = {1.0, 0.5, 4.0};
     struct vector* res = vector_from_array(C, 3);
     bool test = vector_equal(e->eigenvalues, res, 0.01);
@@ -539,7 +539,7 @@ bool test_eigenvalues_simple_2x2() {
     double D[] = {2.0, 1.0,
                   2.0, 3.0};
     struct matrix* M = matrix_from_array(D, 2, 2);
-    struct eigen* e = eigen_solve(M, 0.01, 1); 
+    struct eigen* e = eigen_solve(M, 0.0001, 100); 
     double C[] = {4.0, 1.0};
     struct vector* res = vector_from_array(C, 2);
     bool test = vector_equal(e->eigenvalues, res, 0.01);
@@ -552,7 +552,7 @@ bool test_eigenvalues_simple_3x3() {
                   -2.0,  1.0, 2.0,
                    4.0,  2.0, 5.0};
     struct matrix* M = matrix_from_array(D, 3, 3);
-    struct eigen* e = eigen_solve(M, 0.01, 50); 
+    struct eigen* e = eigen_solve(M, 0.0001, 100); 
     double C[] = {6.0, -5.0, 3};
     struct vector* res = vector_from_array(C, 3);
     bool test = vector_equal(e->eigenvalues, res, 0.01);
