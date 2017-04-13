@@ -215,9 +215,7 @@ void vector_normalize_into(struct vector* reciever, struct vector* v) {
 
 struct vector* vector_scalar_multiply(struct vector* v, double s) {
     struct vector* w = vector_new(v->length);
-    for(int i = 0; i < v->length; i++) {
-        VECTOR_IDX_INTO(w, i) = VECTOR_IDX_INTO(v, i) * s;
-    }
+    vector_scalar_multiply_into(w, v, s);
     return w;
 }
 
@@ -277,4 +275,3 @@ void vector_print(struct vector* v) {
         printf(", %.2f]\n", VECTOR_IDX_INTO(v, v->length - 1));
     }
 }
-
